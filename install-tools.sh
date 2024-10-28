@@ -17,7 +17,7 @@ echo " 1 - Docker + LazyDocker 🐳"
 echo " 2 - Kubernetes (kubectl) ☸️"
 echo " 3 - Ansible 📜"
 echo " 4 - Terraform 🌍"
-echo " 5 - Jenkins 🏗️"
+# echo " 5 - Jenkins 🏗️"
 echo " 6 - AWS CLI ☁️"
 echo " 7 - Azure CLI ☁️"
 echo " 8 - Google Cloud SDK ☁️"
@@ -32,7 +32,9 @@ echo " 16 - minikube 🏗️"
 echo " 17 - k3s 🐍"
 echo " 18 - VS Codium 🗒️"
 echo " 19 - Postman 📮"
-echo " 20 - Install ALL tools"
+echo " 20 - Kustomize 🔧"
+echo " 21 - Insomnia 📡"
+echo " 25 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
 
@@ -116,6 +118,13 @@ install_kubectl() {
     echo "kubectl installed successfully."
 }
 
+# Function to install Kustomize
+install_kustomize() {
+    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    sudo mv ./kustomize /usr/local/bin/kustomize
+    echo "Kustomize installed successfully."
+}
+
 # Function to install Ansible
 install_ansible() {
     sudo apt update
@@ -130,19 +139,20 @@ install_terraform() {
     sudo unzip terraform_1.9.0_linux_amd64.zip
     sudo mv terraform /usr/local/bin/
     sudo rm -f terraform_1.9.0_linux_amd64.zip
+    sudo terraform -install-autocomplete
     echo "Terraform installed successfully."
 }
 
-# Function to install Jenkins
-install_jenkins() {
-    curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-    echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-    sudo apt update
-    sudo apt install -y jenkins
-    sudo systemctl start jenkins
-    sudo systemctl enable jenkins
-    echo "Jenkins installed successfully."
-}
+# # Function to install Jenkins
+# install_jenkins() {
+#     curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+#     echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+#     sudo apt update
+#     sudo apt install -y jenkins
+#     sudo systemctl start jenkins
+#     sudo systemctl enable jenkins
+#     echo "Jenkins installed successfully."
+# }
 
 # Function to install AWS CLI
 install_awscli() {
@@ -217,6 +227,18 @@ install_infracost() {
 # Function to install Postman
 install_postman() {
     sudo snap install postman
+    curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+    echo "Postman and Postman CLI installed successfully."
+}
+
+# Function to install Insomnia
+install_insomnia() {
+    # Add to sources
+    curl -1sLf 'https://packages.konghq.com/public/insomnia/setup.deb.sh' | sudo -E distro=ubuntu codename=focal bash
+    # Refresh repository sources and install Insomnia
+    sudo apt-get update
+    sudo apt-get install insomnia
+    echo "Insomnia installed successfully."
 }
 
 # Function to install all tools
@@ -226,7 +248,7 @@ install_all() {
     install_kubectl
     install_ansible
     install_terraform
-    install_jenkins
+    # install_jenkins
     install_awscli
     install_azurecli
     install_gcloud
@@ -239,6 +261,8 @@ install_all() {
     install_minikube
     install_k3s
     install_postman
+    install_kustomize
+    install_insomnia
     echo "All tools installed successfully."
 }
 
@@ -247,7 +271,7 @@ case $tool_choice in
     2) install_kubectl ;;
     3) install_ansible ;;
     4) install_terraform ;;
-    5) install_jenkins ;;
+    # 5) install_jenkins ;;
     6) install_awscli ;;
     7) install_azurecli ;;
     8) install_gcloud ;;
@@ -262,6 +286,8 @@ case $tool_choice in
     17) install_k3s ;;
     18) install_vscodium ;;
     19) install_postman ;;
-    20) install_all ;;
+    20) install_kustomize ;;
+    21) install_insomnia ;;
+    25) install_all ;;
     *) echo "Invalid choice, exiting." ;;
 esac
