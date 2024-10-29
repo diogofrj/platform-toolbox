@@ -159,3 +159,7 @@ Se você achou este repositório útil e quer ver mais conteúdo como este, me s
 Se você gostaria de apoiar meu trabalho, você pode me pagar um café. Obrigado pelo seu apoio!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/diogofrj)
+
+## 🫵🏻 **Agradecimentos**
+
+Este código foi inspirado no projeto [DevOps Tools on Ubuntu](https://github.com/francotel/devops-tools-on-ubuntu)   
