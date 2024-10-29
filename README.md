@@ -62,13 +62,13 @@ Você pode personalizar os scripts para incluir ou excluir ferramentas específi
 1. Clone este repositório em sua máquina local:
 
    ```bash
-   git clone https://github.com/your-username/devops-tools-on-ubuntu.git
+   git clone https://github.com/your-username/sre-starter-kit.git
    ```
 
 2. Navegue até o diretório do projeto:
 
    ```bash
-   cd devops-tools-on-ubuntu
+   cd sre-starter-kit
    ```
 
 3. Torne o script executável:
@@ -106,12 +106,12 @@ Se você quiser usar o Vagrant para configurar uma máquina virtual Ubuntu e clo
 1. **Clone este repositório em sua máquina local:**
 
    ```bash
-   git clone https://github.com/your-username/devops-tools-on-ubuntu.git
+   git clone https://github.com/your-username/sre-starter-kit.git
    ```
 2. Navegue até o diretório do projeto:
 
    ```bash
-   cd devops-tools-on-ubuntu
+   cd sre-starter-kit
    ```
 
 3. Execute o Vagrant para configurar a máquina virtual:
@@ -130,7 +130,7 @@ Este comando configurará a VM Ubuntu, instalará o Git e clonará o repositóri
 5. Uma vez dentro da VM, navegue até o diretório onde o repositório foi clonado:
 
    ```bash
-   cd /home/vagrant/devops-tools-on-ubuntu
+   cd /home/vagrant/sre-starter-kit
    ```
 
 Execute o script de instalação manualmente:
@@ -153,7 +153,10 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou env
 
 Se você achou este repositório útil e quer ver mais conteúdo como este, me siga no LinkedIn para ficar atualizado sobre mais projetos e recursos!
 
-[![LinkedIn](https://seeklogo.com/images/L/linkedin-logo-E871D8437B-seeklogo.com.png)](https://www.linkedin.com/in/diogofernandesrj/)
+<p align="left">
+<a href="https://linkedin.com/in/diogofernandesrj" target="blank"><img align="center" src="https://raw.githubusercontent.com/diogofrj/misc/main/images/Social/linked-in-alt.svg" alt="diogofernandesrj" height="30" width="40" /></a>
+<a href="https://twitter.com/diogofrj" target="blank"><img align="center" src="https://raw.githubusercontent.com/diogofrj/misc/main/images/Social/twitter.svg" alt="diogofrj" height="30" width="40" /></a>
+</p>
 
 Se você gostaria de apoiar meu trabalho, você pode me pagar um café. Obrigado pelo seu apoio!
 
