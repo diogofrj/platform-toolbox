@@ -91,9 +91,9 @@ Depois que o script terminar de executar, as ferramentas DevOps estarão instala
 
 Por exemplo:
 
-Para verificar a instalação do Docker: `docker --version`
-Para verificar o Ansible: `ansible --version`
-Para confirmar o Terraform: `terraform --version`
+- Para verificar a instalação do Docker: `docker --version`
+- Para verificar o Ansible: `ansible --version`
+- Para confirmar o Terraform: `terraform --version`
 
 Sinta-se à vontade para modificar o script se quiser adicionar mais ferramentas ou ajustar o processo de instalação para sua configuração específica.
 
