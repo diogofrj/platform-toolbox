@@ -34,9 +34,19 @@ echo " 18 - VS Codium 🗒️"
 echo " 19 - Postman 📮"
 echo " 20 - Kustomize 🔧"
 echo " 21 - Insomnia 📡"
+echo " 22 - Vagrant 🛠️"
 echo " 25 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
+
+
+# Install Vagrant
+install_vagrant() {
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    sudo apt update && sudo apt install vagrant
+    echo "Vagrant installed successfully."
+}
 
 # Function to VSCodium
 install_vscodium() {
@@ -204,7 +214,7 @@ install_vault() {
 # Function to install HashiCorp Consul
 install_consul() {
     sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null 
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
     sudo apt update && sudo apt install consul -y
     echo "HashiCorp Packer installed successfully."
 }
@@ -263,6 +273,7 @@ install_all() {
     install_postman
     install_kustomize
     install_insomnia
+    install_vagrant
     echo "All tools installed successfully."
 }
 
@@ -288,6 +299,7 @@ case $tool_choice in
     19) install_postman ;;
     20) install_kustomize ;;
     21) install_insomnia ;;
+    22) install_vagrant ;;
     25) install_all ;;
     *) echo "Invalid choice, exiting." ;;
 esac
