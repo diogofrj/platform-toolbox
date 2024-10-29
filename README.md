@@ -62,7 +62,7 @@ Você pode personalizar os scripts para incluir ou excluir ferramentas específi
 1. Clone este repositório em sua máquina local:
 
    ```bash
-   git clone https://github.com/your-username/sre-starter-kit.git
+   git clone https://github.com/diogofrj/sre-starter-kit.git
    ```
 
 2. Navegue até o diretório do projeto:
@@ -91,11 +91,9 @@ Depois que o script terminar de executar, as ferramentas DevOps estarão instala
 
 Por exemplo:
 
-   ```bash
-Para verificar a instalação do Docker: docker --version
-Para verificar o Ansible: ansible --version
-Para confirmar o Terraform: terraform --version
-   ```
+Para verificar a instalação do Docker: `docker --version`
+Para verificar o Ansible: `ansible --version`
+Para confirmar o Terraform: `terraform --version`
 
 Sinta-se à vontade para modificar o script se quiser adicionar mais ferramentas ou ajustar o processo de instalação para sua configuração específica.
 
