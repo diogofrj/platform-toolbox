@@ -1,139 +1,160 @@
-# 🚀 DevOps Tools on Ubuntu
+# 🚀 SRE Starter Kit for Ubuntu
 
-Welcome to **DevOps Tools on Ubuntu**, a script that automates the installation of essential DevOps tools on an Ubuntu system. This project is designed to simplify the setup process for those who need to quickly install and configure DevOps tools on their machines.
+Bem-vindo ao **SRE Starter Kit for Ubuntu**, um script que automatiza a instalação de ferramentas essenciais de DevOps/SRE em um sistema Ubuntu. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas DevOps/SRE em suas máquinas.
 
-## 📖 Table of Contents
+## 📖 Índice
 
-- [Introduction](#introduction)
-- [Tools Installed](#tools-installed)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Vagrant Setup](#vagrant-setup)
-- [Contributing](#contributing)
-- [License](#license)
+- [Introdução](#-introdução)
+- [Ferramentas Instaladas](#-ferramentas-instaladas) 
+- [Pré-requisitos](#-pré-requisitos)
+- [Instalação](#-instalação)
+- [Uso](#-uso)
+- [Configuração do Vagrant](#-configuração-do-vagrant)
+- [Contribuindo](#-contribuindo)
+- [Licença](#-licença)
 
-## 🛠️ Introduction
+## 🛠️ Introdução
 
-This repository contains a Bash script (`install_tools.sh`) that installs popular DevOps tools on an Ubuntu machine. Whether you're setting up a fresh development environment or configuring a CI/CD pipeline, this script helps you get up and running quickly.
+Este repositório contém:
+- Um script Bash (`install_tools.sh`) que instala ferramentas populares de DevOps/SRE em uma máquina Ubuntu.
+- Um script Bash (`install-apps.sh`) que instala aplicações populares e de desenvolvimento em uma máquina Ubuntu.
+- Um arquivo de configuração do Vagrant (`Vagrantfile`) para provisionar uma máquina virtual Ubuntu com um clone deste repositório para testes.
+Seja configurando um ambiente de desenvolvimento novo ou configurando um pipeline de CI/CD, este script ajuda você a começar rapidamente.
 
-## 🧰 Tools Installed
+## 🧰 Ferramentas Instaladas
 
-The script installs the following DevOps tools:
+Os scripts instalam as seguintes ferramentas e outras aplicações:
 
-- 🐳 **Docker**: Containerization platform
-- ☸️ **Kubernetes (kubectl)**: Command-line tool for controlling Kubernetes clusters
-- 📦 **Ansible**: Configuration management tool
-- 🌍 **Terraform**: Infrastructure as code software
-- ⚙️ **Jenkins**: Automation server for CI/CD
-- 🔧 **Git**: Version control system
-- 🟢 **Node.js**: JavaScript runtime (optional for some DevOps workflows)
+- 🐳 **Docker + LazyDocker**: Plataforma de containerização
+- ☸️ **Kubernetes (kubectl)**: Ferramenta de linha de comando para controlar clusters Kubernetes
+- 📜 **Ansible**: Ferramenta de gerenciamento de configuração
+- 🌍 **Terraform**: Software de infraestrutura como código
+- ⚙️ **Jenkins**: Servidor de automação para CI/CD
+- 🔧 **Git**: Sistema de controle de versão
+- 🟢 **Node.js**: Runtime JavaScript (opcional para alguns fluxos de trabalho DevOps)
+- ☁️ **AWS CLI**: Interface de linha de comando da AWS
+- ☁️ **Azure CLI**: Interface de linha de comando do Azure
+- ☁️ **Google Cloud SDK**: SDK do Google Cloud Platform
+- ⛵ **Helm**: Gerenciador de pacotes para Kubernetes
+- 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
+- 🔐 **HashiCorp Vault**: Gerenciador de segredos
+- 🌐 **HashiCorp Consul**: Service mesh e descoberta de serviços
+- 💿 **HashiCorp Packer**: Criação automatizada de imagens
+- 💰 **Infracost**: Estimativa de custos de infraestrutura
+- 👀 **k9s**: Interface TUI para Kubernetes
+- 🏗️ **minikube**: Cluster Kubernetes local
+- 🐍 **k3s**: Distribuição leve do Kubernetes
+- 🗒️ **VS Codium**: Editor de código
+- 📮 **Postman**: Plataforma de API
+- 🔧 **Kustomize**: Gerenciador de configuração Kubernetes
+- 📡 **Insomnia**: Cliente de API REST
+- 🛠️ **Vagrant**: Gerenciador de máquinas virtuais
 
-You can customize the script to include or exclude specific tools as per your needs.
+Você pode personalizar os scripts para incluir ou excluir ferramentas específicas conforme suas necessidades.
 
-## 🧑‍💻 Prerequisites
+## 🧑‍💻 Pré-requisitos
 
-- A machine running **Ubuntu 20.04** or later
-- Sudo privileges to install software packages
+- Uma máquina rodando **Ubuntu 22.04** ou posterior
+- Privilégios sudo para instalar pacotes de software
 
-## ⚙️ Installation
+## ⚙️ Instalação
 
-1. Clone this repository to your local machine:
+1. Clone este repositório em sua máquina local:
 
    ```bash
    git clone https://github.com/your-username/devops-tools-on-ubuntu.git
    ```
 
-2. Navigate to the project directory:
+2. Navegue até o diretório do projeto:
 
    ```bash
    cd devops-tools-on-ubuntu
    ```
 
-3. Make the script executable:
+3. Torne o script executável:
 
    ```bash
    chmod +x install-tools.sh
    ```
 
-4. Run the script to install the tools:
+4. Execute o script para instalar as ferramentas:
 
    ```bash
    sudo ./install-tools.sh
    ```
 
-The script will take care of installing the necessary packages and dependencies.
+O script cuidará da instalação dos pacotes e dependências necessários.
 
-## 🏃 Usage
+## 🏃 Uso
 
-Once the script has finished running, the DevOps tools will be installed and ready for use. You can start using them as per your project's requirements.
+Depois que o script terminar de executar, as ferramentas DevOps estarão instaladas e prontas para uso. Você pode começar a usá-las de acordo com os requisitos do seu projeto.
 
-For example:
+Por exemplo:
 
    ```bash
-To check Docker's installation: docker --version
-To verify Ansible: ansible --version
-To confirm Terraform: terraform --version
+Para verificar a instalação do Docker: docker --version
+Para verificar o Ansible: ansible --version
+Para confirmar o Terraform: terraform --version
    ```
 
-Feel free to modify the script if you want to add more tools or tweak the installation process for your specific setup.
+Sinta-se à vontade para modificar o script se quiser adicionar mais ferramentas ou ajustar o processo de instalação para sua configuração específica.
 
-## 🏗️ Vagrant Setup
+## 🏗️ Configuração do Vagrant
 
-If you want to use Vagrant to set up an Ubuntu virtual machine and clone this repository, follow these steps:
+Se você quiser usar o Vagrant para configurar uma máquina virtual Ubuntu e clonar este repositório, siga estas etapas:
 
-1. **Clone this repository to your local machine:**
+1. **Clone este repositório em sua máquina local:**
 
    ```bash
    git clone https://github.com/your-username/devops-tools-on-ubuntu.git
    ```
-2. Navigate to the project directory:
+2. Navegue até o diretório do projeto:
 
    ```bash
    cd devops-tools-on-ubuntu
    ```
 
-3. Run Vagrant to set up the virtual machine:
+3. Execute o Vagrant para configurar a máquina virtual:
 
    ```bash
    vagrant up
    ```
-This command will set up the Ubuntu VM, install Git, and clone the repository.
+Este comando configurará a VM Ubuntu, instalará o Git e clonará o repositório.
 
-4. SSH into the VM:
+4. Acesse a VM via SSH:
 
    ```bash
    vagrant ssh
    ```
 
-5. Once inside the VM, navigate to the directory where the repository was cloned:
+5. Uma vez dentro da VM, navegue até o diretório onde o repositório foi clonado:
 
    ```bash
    cd /home/vagrant/devops-tools-on-ubuntu
    ```
 
-Run the installation script manually:
+Execute o script de instalação manualmente:
 
    ```bash
    chmod +x install-tools.sh
    sudo ./install-tools.sh
    ```
-6. Destroy Vagrant
+6. Destruir o Vagrant
 
     ```bash
     vagrant destroy
     ```
     
-## 🤝 Contributing
+## 🤝 Contribuindo
 
-Contributions are welcome! Feel free to open an issue or submit a pull request with improvements, new features, or bug fixes.
+Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou enviar um pull request com melhorias, novos recursos ou correções de bugs.
 
-##  🤝 **Let's Connect!**
+## 🤝 **Vamos nos Conectar!**
 
-If you find this repository useful and want to see more content like this, follow me on LinkedIn to stay updated on more projects and resources!
+Se você achou este repositório útil e quer ver mais conteúdo como este, me siga no LinkedIn para ficar atualizado sobre mais projetos e recursos!
 
-[![LinkedIn](https://seeklogo.com/images/L/linkedin-logo-E871D8437B-seeklogo.com.png)](https://www.linkedin.com/in/franconavarro/)
+[![LinkedIn](https://seeklogo.com/images/L/linkedin-logo-E871D8437B-seeklogo.com.png)](https://www.linkedin.com/in/diogofernandesrj/)
 
-If you’d like to support my work, you can buy me a coffee. Thank you for your support!
+Se você gostaria de apoiar meu trabalho, você pode me pagar um café. Obrigado pelo seu apoio!
 
-[![BuyMeACoffee](https://cdn.icon-icons.com/icons2/2699/PNG/512/buymeacoffee_official_logo_icon_169440.png)](https://www.buymeacoffee.com/francotel)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/diogofrj)
