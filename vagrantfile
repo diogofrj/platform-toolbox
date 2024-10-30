@@ -4,21 +4,18 @@ Vagrant.configure("2") do |config|
     # Define la caja base que se usará (Ubuntu 20.04 en este caso)
     config.vm.box = "bento/ubuntu-24.04"
 
-    # Configura la red y los recursos de la máquina virtual
-    # config.vm.network "forwarded_port", guest: 22, host: 2222 # SSH
-    # config.vm.network "forwarded_port", guest: 80, host: 8080 # HTTP
+    # Nomeia a VM
+    config.vm.define "sre-starter-kit" do |vm_config|
+        # Configura a rede e os recursos da máquina virtual
+        vm_config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)" # Cambia esto por el nombre correcto de tu interfaz de red
 
-    config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)" # Cambia esto por el nombre correcto de tu interfaz de red
-
-    # Configura el script de provisión
-    config.vm.provision "shell", inline: <<-SHELL
-      # Clona el repositorio
-      git clone https://github.com/diogofrj/devops-tools-ubuntu.git /home/vagrant/devops-tools-ubuntu
-      # Cambia los permisos del script para que sea ejecutable
-      chmod +x /home/vagrant/devops-tools-ubuntu/install-tools.sh
-      echo "Repositorio clonado en /home/vagrant/devops-tools-ubuntu"
-
-      #sudo groupadd docker 2>/dev/null  # Create the docker group if it doesn't exist (ignores error if already exists)
-      #sudo usermod -aG docker $USER     # Add the current user to the docker group =end
-    SHELL
-  end
+        # Configura o script de provisão
+        vm_config.vm.provision "shell", inline: <<-SHELL
+          # Clona o repositório
+          git clone https://github.com/diogofrj/sre-starter-kit.git /home/vagrant/sre-starter-kit
+          # Cambia os permissos do script para que seja executável
+          chmod +x /home/vagrant/sre-starter-kit/install-tools.sh
+          echo "Repositorio clonado em /home/vagrant/sre-starter-kit"
+        SHELL
+    end
+end
