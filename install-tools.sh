@@ -35,9 +35,21 @@ echo " 19 - Postman 📮"
 echo " 20 - Kustomize 🔧"
 echo " 21 - Insomnia 📡"
 echo " 22 - Vagrant 🛠️"
+echo " 23 - Krew 🐶"
 echo " 25 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
+
+# Function to install Krew
+install_krew() {
+    sudo apt-get install git -y
+    (
+        set -x; cd "$(mktemp -d)" && OS="$(uname | tr '[:upper:]' '[:lower:]')" && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && KREW="krew-${OS}_${ARCH}" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew
+        echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
+        echo "Krew installed successfully."
+    )
+}
+
 
 
 # Install Vagrant
@@ -274,6 +286,7 @@ install_all() {
     install_kustomize
     install_insomnia
     install_vagrant
+    install_krew
     echo "All tools installed successfully."
 }
 
@@ -300,6 +313,7 @@ case $tool_choice in
     20) install_kustomize ;;
     21) install_insomnia ;;
     22) install_vagrant ;;
+    23) install_krew ;;
     25) install_all ;;
     *) echo "Invalid choice, exiting." ;;
 esac

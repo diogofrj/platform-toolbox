@@ -53,6 +53,8 @@ coverage/
 
 # Ignorar archivos de registro
 *.log
+*-log*
+
 
 # Ignorar archivos de instalación y de configuración de paquetes
 *.zip
@@ -88,3 +90,5 @@ docker-compose.yml
 # Ignorar configuraciones y logs de Vagrant
 .vagrant/
 *.box
+
+
