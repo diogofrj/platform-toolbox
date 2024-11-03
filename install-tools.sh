@@ -1,18 +1,9 @@
 #!/bin/bash
 
 # Welcome Message
-echo "############################################################################"
-echo "#                                                                          #"
-echo "#        DevOps Tool Installer by francotel                                #"
-echo "#                                                                          #"
-echo "#        Automate the installation of essential DevOps tools on Ubuntu     #"
-echo "#                                                                          #"
-echo "############################################################################"
 echo ""
-echo "Automate the installation of essential DevOps tools on your Ubuntu machine."
-echo "Choose from a wide range of tools and get started quickly and easily."
+echo "Instalando ferramentas necessárias para o SRE Starter Kit"
 echo ""
-echo "Tools available for installation:"
 echo " 1 - Docker + LazyDocker 🐳"
 echo " 2 - Kubernetes (kubectl) ☸️"
 echo " 3 - Ansible 📜"
@@ -154,16 +145,67 @@ install_ansible() {
     echo "Ansible installed successfully."
 }
 
-# Function to install Terraform
+
 install_terraform() {
-    sudo apt install zip -y
-    sudo curl -LO https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
-    sudo unzip terraform_1.9.0_linux_amd64.zip
+    # Verifica se o Terraform já está instalado
+    if command -v terraform &> /dev/null; then
+        CURRENT_VERSION=$(terraform version | head -n1 | cut -d' ' -f2 | sed 's/v//')
+        echo "Terraform versão ${CURRENT_VERSION} já está instalado."
+        echo ""
+        echo "O que você deseja fazer?"
+        echo "1 - Manter a versão atual (${CURRENT_VERSION})"
+        echo "2 - Atualizar para a última versão estável"
+        echo "3 - Instalar uma versão específica"
+        echo "    Exemplo de formato: 1.5.7, 1.6.0, 1.7.2"
+        echo ""
+        read -p "Escolha uma opção (1-3): " tf_option
+
+        case $tf_option in
+            1)
+                echo "Mantendo versão atual ${CURRENT_VERSION}"
+                return
+                ;;
+            2)
+                LATEST_VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
+                VERSION=$LATEST_VERSION
+                ;;
+            3)
+                read -p "Digite a versão desejada (exemplo: 1.5.7): " VERSION
+                if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo "Formato de versão inválido. Use o formato: X.Y.Z (exemplo: 1.5.7)"
+                    return 1
+                fi
+                ;;
+            *)
+                echo "Opção inválida"
+                return 1
+                ;;
+        esac
+    else
+        # Se não estiver instalado, instala a última versão
+        VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
+    fi
+
+    echo "Instalando Terraform versão ${VERSION}..."
+    
+    # Faz o download e instalação
+    sudo curl -LO "https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip"
+    unzip "terraform_${VERSION}_linux_amd64.zip"
     sudo mv terraform /usr/local/bin/
-    sudo rm -f terraform_1.9.0_linux_amd64.zip
-    sudo terraform -install-autocomplete
-    echo "Terraform installed successfully."
+    sudo rm -f "terraform_${VERSION}_linux_amd64.zip LICENSE.txt"
+    
+    # Configura o auto-complete
+    terraform -install-autocomplete
+    
+    # Verifica a instalação
+    INSTALLED_VERSION=$(terraform version | head -n1)
+    echo "✅ Terraform ${INSTALLED_VERSION} instalado com sucesso!"
 }
+
+
+
+
+
 
 # # Function to install Jenkins
 # install_jenkins() {
