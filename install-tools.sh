@@ -1,66 +1,49 @@
 #!/bin/bash
+#by: @diogo-fernandes_enterprise @diogofrj 🐙"
+set -e
+
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
 
 # Welcome Message
 echo ""
-echo "Instalando ferramentas necessárias para o SRE Starter Kit"
+echo -e "${GREEN}Instalando ferramentas necessárias para o Platform Engineer Toolbox${NC}"
 echo ""
-echo " 1 - Docker + LazyDocker 🐳"
-echo " 2 - Kubernetes (kubectl) ☸️"
-echo " 3 - Ansible 📜"
-echo " 4 - Terraform 🌍"
-# echo " 5 - Jenkins 🏗️"
-echo " 6 - AWS CLI ☁️"
-echo " 7 - Azure CLI ☁️"
-echo " 8 - Google Cloud SDK ☁️"
-echo " 9 - Helm ⛵"
-echo " 10 - GitLab Runner 🏃‍♂️"
-echo " 11 - HashiCorp Vault 🔐"
-echo " 12 - HashiCorp Consul 🌐"
-echo " 13 - HashiCorp Packer 💿"
-echo " 14 - Infracost 💰"
+echo -e "${YELLOW}Command Line Tools:${NC}"
+echo " 1 - Ansible 📜"
+echo " 2 - AWS CLI ☁️" 
+echo " 3 - Azure CLI ☁️"
+echo " 4 - AzCopy 📡"
+echo " 5 - Docker + LazyDocker 🐳"
+echo " 6 - GitLab Runner 🏃‍♂️"
+echo " 7 - Google Cloud SDK ☁️"
+echo " 8 - HashiCorp Consul 🌐"
+echo " 9 - HashiCorp Packer 💿"
+echo " 10 - HashiCorp Vault 🔐"
+echo " 11 - HashiCorp Vagrant 🛠️"
+echo " 12 - Helm ⛵"
+echo " 13 - Infracost 💰"
+echo " 14 - k3s 🐍"
 echo " 15 - k9s 👀"
-echo " 16 - minikube 🏗️"
-echo " 17 - k3s 🐍"
-echo " 18 - VS Codium 🗒️"
-echo " 19 - Postman 📮"
-echo " 20 - Kustomize 🔧"
-echo " 21 - Insomnia 📡"
-echo " 22 - Vagrant 🛠️"
-echo " 23 - Krew 🐶"
-echo " 25 - Install ALL tools"
+echo " 16 - Krew 🐶"
+echo " 17 - Kubernetes (kubectl) ☸️"
+echo " 18 - Kustomize 🔧"
+echo " 19 - minikube 🏗️"
+echo " 20 - Terraform 🌍"
+echo " 21 - Terraform-docs 📜"
+echo -e "${YELLOW}Web Tools:${NC}"
+echo " 22 - Jenkins 🏗️"
+echo -e "${YELLOW}UI Desktop Tools:${NC}"
+echo " 23 - Insomnia 📡"
+echo " 24 - Postman 📮"
+echo " 25 - VS Codium 🗒️"
+echo " 26 - VirtualBox 💾"
+echo " 27 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
-
-# Function to install Krew
-install_krew() {
-    sudo apt-get install git -y
-    (
-        set -x; cd "$(mktemp -d)" && OS="$(uname | tr '[:upper:]' '[:lower:]')" && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && KREW="krew-${OS}_${ARCH}" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew
-        echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
-        echo "Krew installed successfully."
-    )
-}
-
-
-
-# Install Vagrant
-install_vagrant() {
-    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    sudo apt update && sudo apt install vagrant
-    echo "Vagrant installed successfully."
-}
-
-# Function to VSCodium
-install_vscodium() {
-    wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
-    echo 'deb [signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
-    | sudo tee /etc/apt/sources.list.d/vscodium.list
-    sudo apt update && sudo apt install -y codium
-    echo "VSCodium installed successfully."
-}
 
 # Function to install Docker
 install_docker() {
@@ -79,48 +62,22 @@ install_docker() {
     # Start and enable Docker
     sudo systemctl start docker
     sudo systemctl enable docker
-
-    # Agrega el usuario actual al grupo docker
     sudo usermod -aG docker $USER
-
-    # Directorio destino (puedes cambiarlo si es necesario)
     DIR="${DIR:-"$HOME/.local/bin"}"
-
-    # Determina la arquitectura del sistema
     ARCH=$(uname -m)
 
-    # Obtén la última versión disponible de LazyDocker
+    # LazyDocker Variables
     GITHUB_LATEST_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
     GITHUB_FILE="lazydocker_${GITHUB_LATEST_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz"
     GITHUB_URL="https://github.com/jesseduffield/lazydocker/releases/download/${GITHUB_LATEST_VERSION}/${GITHUB_FILE}"
 
-    # install/update the local binary
+    # LazyDocker Install
     sudo curl -L -o lazydocker.tar.gz $GITHUB_URL
     sudo tar xzvf lazydocker.tar.gz lazydocker
     sudo install -Dm 755 lazydocker -t "$DIR"
     sudo rm lazydocker lazydocker.tar.gz
 
-    echo "Docker ha sido instalado y LazyDocker ha sido configurado correctamente."
-}
-
-# Function to install k9s
-install_k9s() {
-    sudo curl -sS https://webinstall.dev/k9s | bash
-    echo "k9s installed successfully."
-}
-
-# Function to install minikube
-install_minikube() {
-    sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-    sudo install minikube-linux-amd64 /usr/local/bin/minikube
-    sudo rm -f minikube-linux-amd64
-    echo "minikube installed successfully."
-}
-
-# Function to install k3s
-install_k3s() {
-    sudo curl -sfL https://get.k3s.io | sh -
-    echo "k3s installed successfully."
+    echo -e "${GREEN}Docker + LazyDocker instalado com sucesso!${NC}"
 }
 
 # Function to install kubectl
@@ -128,23 +85,15 @@ install_kubectl() {
     sudo curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
     sudo chmod +x ./kubectl
     sudo mv ./kubectl /usr/local/bin/kubectl
-    echo "kubectl installed successfully."
-}
-
-# Function to install Kustomize
-install_kustomize() {
-    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-    sudo mv ./kustomize /usr/local/bin/kustomize
-    echo "Kustomize installed successfully."
+    echo -e "${GREEN}kubectl instalado com sucesso!${NC}"
 }
 
 # Function to install Ansible
 install_ansible() {
     sudo apt update
     sudo apt install -y ansible
-    echo "Ansible installed successfully."
+    echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
 }
-
 
 install_terraform() {
     # Verifica se o Terraform já está instalado
@@ -186,7 +135,7 @@ install_terraform() {
         VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
     fi
 
-    echo "Instalando Terraform versão ${VERSION}..."
+    echo -e "${YELLOW}Instalando Terraform versão ${VERSION}...${NC}"
     
     # Faz o download e instalação
     sudo curl -LO "https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip"
@@ -199,24 +148,24 @@ install_terraform() {
     
     # Verifica a instalação
     INSTALLED_VERSION=$(terraform version | head -n1)
-    echo "✅ Terraform ${INSTALLED_VERSION} instalado com sucesso!"
+    echo -e "${GREEN}✅ Terraform ${INSTALLED_VERSION} instalado com sucesso!${NC}"
 }
 
-
-
-
-
-
-# # Function to install Jenkins
-# install_jenkins() {
-#     curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-#     echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-#     sudo apt update
-#     sudo apt install -y jenkins
-#     sudo systemctl start jenkins
-#     sudo systemctl enable jenkins
-#     echo "Jenkins installed successfully."
-# }
+install_terraform_docs() {
+    curl -sSLo /tmp/terraform-docs.tar.gz https://terraform-docs.io/dl/v0.19.0/terraform-docs-v0.19.0-$(uname)-amd64.tar.gz
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Erro ao baixar terraform-docs. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    tar -xzf /tmp/terraform-docs.tar.gz -C /tmp
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}Erro ao descompactar terraform-docs.${NC}"
+        return 1
+    fi
+    chmod +x /tmp/terraform-docs
+    sudo mv /tmp/terraform-docs /usr/local/bin/terraform-docs
+    echo -e "${GREEN}Terraform-docs instalado com sucesso!${NC}"
+}
 
 # Function to install AWS CLI
 install_awscli() {
@@ -225,13 +174,19 @@ install_awscli() {
     sudo unzip awscliv2.zip
     sudo ./aws/install
     sudo rm -rf awscliv2.zip aws
-    echo "AWS CLI installed successfully."
+    echo -e "${GREEN}AWS CLI instalado com sucesso!${NC}"
 }
 
 # Function to install Azure CLI
 install_azurecli() {
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-    echo "Azure CLI installed successfully."
+    echo -e "${GREEN}Azure CLI instalado com sucesso!${NC}"
+}
+
+# Function to install AzCopy
+install_azcopy() {
+    curl -L https://aka.ms/downloadazcopy-v10-linux -o azcopy.tar.gz && tar -xvf azcopy.tar.gz && sudo cp ./azcopy_linux_amd64_*/azcopy /usr/local/bin/ && sudo chmod 755 /usr/local/bin/azcopy && rm -rf azcopy.tar.gz azcopy_linux_amd64_*
+    echo -e "${GREEN}AzCopy instalado com sucesso!${NC}"
 }
 
 # Function to install Google Cloud SDK
@@ -240,7 +195,7 @@ install_gcloud() {
     sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     sudo apt update && sudo apt install google-cloud-cli -y
-}
+    echo -e "${GREEN}Google Cloud SDK instalado com sucesso!${NC}"
 
 # Function to install Helm
 install_helm() {
@@ -248,13 +203,13 @@ install_helm() {
     sudo chmod 700 get_helm.sh
     sudo ./get_helm.sh
     sudo rm -f get_helm.sh
-    echo "Helm installed successfully."
+    echo -e "${GREEN}Helm instalado com sucesso!${NC}"
 }
 
 # Function to install GitLab Runner
 install_gitlab_runner() {
     sudo curl -s https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
-    echo "GitLab Runner installed successfully."
+    echo -e "${GREEN}GitLab Runner instalado com sucesso!${NC}"
 }
 
 # Function to install HashiCorp Vault
@@ -262,7 +217,7 @@ install_vault() {
     sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
     sudo apt update && sudo apt install vault -y
-    echo "HashiCorp Vault installed successfully."
+    echo -e "${GREEN}HashiCorp Vault instalado com sucesso!${NC}"
 }
 
 # Function to install HashiCorp Consul
@@ -270,7 +225,7 @@ install_consul() {
     sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
     sudo apt update && sudo apt install consul -y
-    echo "HashiCorp Packer installed successfully."
+    echo -e "${GREEN}HashiCorp Consul instalado com sucesso!${NC}"
 }
 
 # Function to install HashiCorp Packer
@@ -278,21 +233,59 @@ install_packer() {
     sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
     sudo apt update && sudo apt install packer -y
-    echo "HashiCorp Packer installed successfully."
+    echo -e "${GREEN}HashiCorp Packer instalado com sucesso!${NC}"
 }
 
 # Function to install Infracost
 install_infracost() {
     echo "Installing Infracost..."
     curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
-    echo "Infracost installed successfully."
+    echo -e "${GREEN}Infracost instalado com sucesso!${NC}"
+}
+
+# Function to install k9s
+install_k9s() {
+    sudo curl -sS https://webinstall.dev/k9s | bash
+    echo -e "${GREEN}k9s instalado com sucesso!${NC}"
+}
+
+# Function to install minikube
+install_minikube() {
+    sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+    sudo rm -f minikube-linux-amd64
+    echo -e "${GREEN}minikube instalado com sucesso!${NC}"
+}
+
+# Function to install k3s
+install_k3s() {
+    sudo curl -sfL https://get.k3s.io | sh -
+    echo -e "${GREEN}k3s instalado com sucesso!${NC}"
+}
+
+# Function to VSCodium
+install_vscodium() {
+    wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
+    | gpg --dearmor \
+    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
+    | sudo tee /etc/apt/sources.list.d/vscodium.list
+    sudo apt update && sudo apt install -y codium
+    echo -e "${GREEN}VSCodium instalado com sucesso!${NC}"
 }
 
 # Function to install Postman
 install_postman() {
     sudo snap install postman
     curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-    echo "Postman and Postman CLI installed successfully."
+    echo -e "${GREEN}Postman e Postman CLI instalado com sucesso!${NC}"
+}
+
+# Function to install Kustomize
+install_kustomize() {
+    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    sudo mv ./kustomize /usr/local/bin/kustomize
+    echo -e "${GREEN}Kustomize instalado com sucesso!${NC}"
 }
 
 # Function to install Insomnia
@@ -302,7 +295,52 @@ install_insomnia() {
     # Refresh repository sources and install Insomnia
     sudo apt-get update
     sudo apt-get install insomnia
-    echo "Insomnia installed successfully."
+    echo -e "${GREEN}Insomnia instalado com sucesso!${NC}"
+}
+
+# Function to install Vagrant
+install_vagrant() {
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    sudo apt update && sudo apt install vagrant
+    echo -e "${GREEN}Vagrant instalado com sucesso!${NC}"
+}
+
+# Function to install Krew
+install_krew() {
+    sudo apt-get install git -y
+    (
+        set -x; cd "$(mktemp -d)" && OS="$(uname | tr '[:upper:]' '[:lower:]')" && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && KREW="krew-${OS}_${ARCH}" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew
+        echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
+        echo -e "${GREEN}Krew instalado com sucesso!${NC}"
+    )
+}
+install_virtualbox() {
+    # Add VirtualBox repository key
+    #wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add -
+    wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
+
+
+    # Add VirtualBox repository to sources list
+    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian raring non-free contrib" >> /etc/apt/sources.list.d/virtualbox.org.list'
+
+    # Update package list and install specified VirtualBox version
+    sudo apt-get update
+    sudo apt-get install -y virtualbox
+
+    # Add current user to vboxusers group
+    sudo usermod -a -G vboxusers $(whoami)
+
+    # Get the installed VirtualBox version
+    INSTALLED_VER=$(vboxmanage --version)
+    INSTALLED_VER=${INSTALLED_VER%%r*}
+
+    # Download and install the extension pack for the installed version
+    wget -O ~/Downloads/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack http://download.virtualbox.org/virtualbox/$INSTALLED_VER/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack
+    echo "virtualbox extpack"
+    sudo vboxmanage extpack install ~/Downloads/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack
+
+    echo "You must log out and log back in for user group changes to take effect."
 }
 
 # Function to install all tools
@@ -312,7 +350,7 @@ install_all() {
     install_kubectl
     install_ansible
     install_terraform
-    # install_jenkins
+    install_jenkins
     install_awscli
     install_azurecli
     install_gcloud
@@ -329,7 +367,9 @@ install_all() {
     install_insomnia
     install_vagrant
     install_krew
-    echo "All tools installed successfully."
+    install_terraform_docs
+    install_virtualbox
+    echo -e "${GREEN}Todas as ferramentas instaladas com sucesso!${NC}"
 }
 
 case $tool_choice in
@@ -337,25 +377,28 @@ case $tool_choice in
     2) install_kubectl ;;
     3) install_ansible ;;
     4) install_terraform ;;
-    # 5) install_jenkins ;;
-    6) install_awscli ;;
-    7) install_azurecli ;;
-    8) install_gcloud ;;
-    9) install_helm ;;
-    10) install_gitlab_runner ;;
-    11) install_vault ;;
-    12) install_consul ;;
-    13) install_packer ;;
-    14) install_infracost ;;
-    15) install_k9s ;;
-    16) install_minikube ;;
-    17) install_k3s ;;
-    18) install_vscodium ;;
-    19) install_postman ;;
-    20) install_kustomize ;;
-    21) install_insomnia ;;
-    22) install_vagrant ;;
-    23) install_krew ;;
-    25) install_all ;;
-    *) echo "Invalid choice, exiting." ;;
+    5) install_terraform_docs ;;
+    6) install_jenkins ;;
+    7) install_awscli ;;
+    8) install_azurecli ;;
+    9) install_azcopy ;;
+    10) install_gcloud ;;
+    11) install_helm ;;
+    12) install_gitlab_runner ;;
+    13) install_vault ;;
+    14) install_consul ;;
+    15) install_packer ;;
+    16) install_infracost ;;
+    17) install_k9s ;;
+    18) install_minikube ;;
+    19) install_k3s ;;
+    20) install_vscodium ;;
+    21) install_postman ;;
+    22) install_kustomize ;;
+    23) install_insomnia ;;
+    24) install_vagrant ;;
+    25) install_krew ;;
+    26) install_virtualbox ;;
+    27) install_all ;;
+    *) echo -e "${RED}Opção inválida, saindo...${NC}" ;;
 esac
