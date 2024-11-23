@@ -1,6 +1,6 @@
-# 🚀 SRE Starter Kit for Ubuntu
+# 🚀 Platform Engineer Toolbox for Ubuntu
 
-Bem-vindo ao **SRE Starter Kit for Ubuntu**, um script que automatiza a instalação de ferramentas essenciais de DevOps/SRE em um sistema Ubuntu. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas DevOps/SRE em suas máquinas.
+Bem-vindo ao **Platform Engineer Toolbox for Ubuntu**, um script que automatiza a instalação de ferramentas essenciais para qualquer profissional em um sistema Ubuntu. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas Cloud Platform Engineer/DevOps/SRE em suas máquinas.
 
 ## 📖 Índice
 
@@ -25,31 +25,37 @@ Seja configurando um ambiente de desenvolvimento novo ou configurando um pipelin
 
 Os scripts instalam as seguintes ferramentas e outras aplicações:
 
-- 🐳 **Docker + LazyDocker**: Plataforma de containerização
-- ☸️ **Kubernetes (kubectl)**: Ferramenta de linha de comando para controlar clusters Kubernetes
+### Command Line Tools:
 - 📜 **Ansible**: Ferramenta de gerenciamento de configuração
-- 🌍 **Terraform**: Software de infraestrutura como código
-- ⚙️ **Jenkins**: Servidor de automação para CI/CD
-- 🔧 **Git**: Sistema de controle de versão
-- 🟢 **Node.js**: Runtime JavaScript (opcional para alguns fluxos de trabalho DevOps)
 - ☁️ **AWS CLI**: Interface de linha de comando da AWS
 - ☁️ **Azure CLI**: Interface de linha de comando do Azure
-- ☁️ **Google Cloud SDK**: SDK do Google Cloud Platform
-- ⛵ **Helm**: Gerenciador de pacotes para Kubernetes
+- 📡 **AzCopy**: Ferramenta de transferência de dados do Azure
+- 🐳 **Docker + LazyDocker**: Plataforma de containerização
 - 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
-- 🔐 **HashiCorp Vault**: Gerenciador de segredos
+- ☁️ **Google Cloud SDK**: SDK do Google Cloud Platform
 - 🌐 **HashiCorp Consul**: Service mesh e descoberta de serviços
 - 💿 **HashiCorp Packer**: Criação automatizada de imagens
+- 🔐 **HashiCorp Vault**: Gerenciador de segredos
+- 🛠️ **HashiCorp Vagrant**: Gerenciador de máquinas virtuais
+- ⛵ **Helm**: Gerenciador de pacotes para Kubernetes
 - 💰 **Infracost**: Estimativa de custos de infraestrutura
-- 👀 **k9s**: Interface TUI para Kubernetes
-- 🏗️ **minikube**: Cluster Kubernetes local
 - 🐍 **k3s**: Distribuição leve do Kubernetes
-- 🗒️ **VS Codium**: Editor de código
-- 📮 **Postman**: Plataforma de API
+- 👀 **k9s**: Interface TUI para Kubernetes
+- 🐶 **Krew**: Gerenciador de plugins do kubectl
+- ☸️ **Kubernetes (kubectl)**: Ferramenta de linha de comando para controlar clusters Kubernetes
 - 🔧 **Kustomize**: Gerenciador de configuração Kubernetes
-- 📡 **Insomnia**: Cliente de API REST
-- 🛠️ **Vagrant**: Gerenciador de máquinas virtuais
+- 🏗️ **minikube**: Cluster Kubernetes local
+- 🌍 **Terraform**: Software de infraestrutura como código
+- 📜 **Terraform-docs**: Gerador de documentação para Terraform
 
+### Web Tools:
+- ⚙️ **Jenkins**: Servidor de automação para CI/CD
+
+### UI Desktop Tools:
+- 📡 **Insomnia**: Cliente de API REST
+- 📮 **Postman**: Plataforma de API
+- 🗒️ **VS Codium**: Editor de código
+- 💾 **VirtualBox**: Gerenciador de máquinas virtuais
 Você pode personalizar os scripts para incluir ou excluir ferramentas específicas conforme suas necessidades.
 
 ## 🧑‍💻 Pré-requisitos
@@ -62,13 +68,13 @@ Você pode personalizar os scripts para incluir ou excluir ferramentas específi
 1. Clone este repositório em sua máquina local:
 
    ```bash
-   git clone https://github.com/diogofrj/sre-starter-kit.git
+   git clone https://github.com/diogofrj/platform-toolbox.git
    ```
 
 2. Navegue até o diretório do projeto:
 
    ```bash
-   cd sre-starter-kit
+   cd platform-toolbox
    ```
 
 3. Torne o script executável:
@@ -104,12 +110,12 @@ Se você quiser usar o Vagrant para configurar uma máquina virtual Ubuntu e clo
 1. **Clone este repositório em sua máquina local:**
 
    ```bash
-   git clone https://github.com/your-username/sre-starter-kit.git
+   git clone https://github.com/your-username/platform-toolbox.git
    ```
 2. Navegue até o diretório do projeto:
 
    ```bash
-   cd sre-starter-kit
+   cd platform-toolbox
    ```
 
 3. Execute o Vagrant para configurar a máquina virtual:
@@ -128,7 +134,7 @@ Este comando configurará a VM Ubuntu, instalará o Git e clonará o repositóri
 5. Uma vez dentro da VM, navegue até o diretório onde o repositório foi clonado:
 
    ```bash
-   cd /home/vagrant/sre-starter-kit
+   cd /home/vagrant/platform-toolbox
    ```
 
 Execute o script de instalação manualmente:
