@@ -1,21 +1,21 @@
 # Vagrantfile
 
 Vagrant.configure("2") do |config|
-    # Define la caja base que se usará (Ubuntu 20.04 en este caso)
+    # Define a box base que será utilizada (Ubuntu 24.04 neste caso)
     config.vm.box = "bento/ubuntu-24.04"
 
-    # Nomeia a VM
-    config.vm.define "sre-starter-kit" do |vm_config|
+    # Define o nome da máquina virtual
+    config.vm.define "platform-toolbox" do |vm_config|
         # Configura a rede e os recursos da máquina virtual
-        vm_config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)" # Cambia esto por el nombre correcto de tu interfaz de red
+        vm_config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)" # Você pode alterar para o nome correto da sua interface de rede
 
-        # Configura o script de provisão
+        # Configura o script de provisionamento
         vm_config.vm.provision "shell", inline: <<-SHELL
-          # Clona o repositório
-          git clone https://github.com/diogofrj/sre-starter-kit.git /home/vagrant/sre-starter-kit
-          # Cambia os permissos do script para que seja executável
-          chmod +x /home/vagrant/sre-starter-kit/install-tools.sh
-          echo "Repositorio clonado em /home/vagrant/sre-starter-kit"
+          # Clona o repositório do projeto
+          git clone https://github.com/diogofrj/platform-toolbox.git /home/vagrant/platform-toolbox
+          # Altera as permissões do script para torná-lo executável
+          chmod +x /home/vagrant/platform-toolbox/install-tools.sh
+          echo "Repositorio clonado em /home/vagrant/platform-toolbox"
         SHELL
     end
 end
