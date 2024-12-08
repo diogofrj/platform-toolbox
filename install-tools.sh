@@ -16,32 +16,36 @@ echo -e "${YELLOW}Command Line Tools:${NC}"
 echo " 1 - Ansible 📜"
 echo " 2 - AWS CLI ☁️" 
 echo " 3 - Azure CLI ☁️"
-echo " 4 - AzCopy 📡"
-echo " 5 - Docker + LazyDocker 🐳"
-echo " 6 - GitLab Runner 🏃‍♂️"
-echo " 7 - Google Cloud SDK ☁️"
-echo " 8 - HashiCorp Consul 🌐"
-echo " 9 - HashiCorp Packer 💿"
-echo " 10 - HashiCorp Vault 🔐"
-echo " 11 - HashiCorp Vagrant 🛠️"
-echo " 12 - Helm ⛵"
-echo " 13 - Infracost 💰"
-echo " 14 - k3s 🐍"
-echo " 15 - k9s 👀"
-echo " 16 - Krew 🐶"
-echo " 17 - Kubernetes (kubectl) ☸️"
-echo " 18 - Kustomize 🔧"
-echo " 19 - minikube 🏗️"
-echo " 20 - Terraform 🌍"
-echo " 21 - Terraform-docs 📜"
+echo " 4 - Azure Developer CLI 🔧"
+echo " 5 - AzCopy 📡"
+echo " 6 - Docker + LazyDocker 🐳"
+echo " 7 - GitLab Runner 🏃‍♂️"
+echo " 8 - Google Cloud SDK ☁️"
+echo " 9 - HashiCorp Consul 🌐"
+echo " 10 - HashiCorp Packer 💿"
+echo " 11 - HashiCorp Vault 🔐"
+echo " 12 - HashiCorp Vagrant 🛠️"
+echo " 13 - Helm ⛵"
+echo " 14 - Infracost 💰"
+echo " 15 - k3s 🐍"
+echo " 16 - k9s 👀"
+echo " 17 - Krew 🐶"
+echo " 18 - kubectl ☸️"
+echo " 19 - Kustomize 🔧"
+echo " 20 - minikube 🏗️"
+echo " 21 - KIND 🐶"
+echo " 22 - Terraform 🌍"
+echo " 23 - Terraform-docs 📜"
+echo " 24 - ArgoCD 📜"
+echo " 25 - Terragrunt 📜"
 echo -e "${YELLOW}Web Tools:${NC}"
-echo " 22 - Jenkins 🏗️"
+echo " 26 - Jenkins 🏗️"
 echo -e "${YELLOW}UI Desktop Tools:${NC}"
-echo " 23 - Insomnia 📡"
-echo " 24 - Postman 📮"
-echo " 25 - VS Codium 🗒️"
-echo " 26 - VirtualBox 💾"
-echo " 27 - Install ALL tools"
+echo " 27 - Insomnia 📡"
+echo " 28 - Postman 📮"
+echo " 29 - VS Codium 🗒️"
+echo " 30 - VirtualBox 💾"
+echo " 00 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
 
@@ -138,6 +142,14 @@ install_terraform() {
     echo -e "${YELLOW}Instalando Terraform versão ${VERSION}...${NC}"
     
     # Faz o download e instalação
+    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+    sudo apt update
+    sudo apt install -y terraform-ls
+    curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
     sudo curl -LO "https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip"
     unzip "terraform_${VERSION}_linux_amd64.zip"
     sudo mv terraform /usr/local/bin/
@@ -183,6 +195,12 @@ install_azurecli() {
     echo -e "${GREEN}Azure CLI instalado com sucesso!${NC}"
 }
 
+# Function to install Azure Developer CLI
+install_azdevcli() {
+    sudo curl -fsSL https://aka.ms/install-azd.sh | bash
+    echo -e "${GREEN}Azure Developer CLI instalado com sucesso!${NC}"
+}
+
 # Function to install AzCopy
 install_azcopy() {
     curl -L https://aka.ms/downloadazcopy-v10-linux -o azcopy.tar.gz && tar -xvf azcopy.tar.gz && sudo cp ./azcopy_linux_amd64_*/azcopy /usr/local/bin/ && sudo chmod 755 /usr/local/bin/azcopy && rm -rf azcopy.tar.gz azcopy_linux_amd64_*
@@ -196,6 +214,7 @@ install_gcloud() {
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     sudo apt update && sudo apt install google-cloud-cli -y
     echo -e "${GREEN}Google Cloud SDK instalado com sucesso!${NC}"
+}
 
 # Function to install Helm
 install_helm() {
@@ -259,8 +278,64 @@ install_minikube() {
 
 # Function to install k3s
 install_k3s() {
-    sudo curl -sfL https://get.k3s.io | sh -
-    echo -e "${GREEN}k3s instalado com sucesso!${NC}"
+    # Verifica se está rodando no WSL
+    if grep -qi microsoft /proc/version; then
+        echo -e "${YELLOW}Atenção: Você está rodando no WSL!${NC}"
+        echo -e "${YELLOW}O K3s pode ter problemas no WSL devido a limitações do systemd.${NC}"
+        echo -e "${YELLOW}Alternativas recomendadas para WSL:${NC}"
+        echo "1 - KIND (Kubernetes in Docker)"
+        echo "2 - Minikube"
+        echo "3 - Docker Desktop com Kubernetes"
+        echo -e "${YELLOW}Deseja continuar com a instalação do K3s mesmo assim? (s/n)${NC}"
+        read -p "Resposta: " continue_install
+        
+        if [ "$continue_install" != "s" ] && [ "$continue_install" != "S" ]; then
+            echo -e "${YELLOW}Instalação do K3s cancelada.${NC}"
+            return 1
+        fi
+    fi
+
+    echo -e "${YELLOW}Instalando K3s...${NC}"
+    # Instala K3s com permissões adequadas para o kubeconfig
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644" sh -
+    
+    # Verifica se a instalação foi bem sucedida
+    if [ $? -eq 0 ]; then
+        # Configura o ambiente para o usuário atual
+        mkdir -p $HOME/.kube
+        sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        
+        # Adiciona o KUBECONFIG ao perfil do usuário
+        if [ -f "$HOME/.bashrc" ]; then
+            echo 'export KUBECONFIG=$HOME/.kube/config' >> $HOME/.bashrc
+        fi
+        if [ -f "$HOME/.zshrc" ]; then
+            echo 'export KUBECONFIG=$HOME/.kube/config' >> $HOME/.zshrc
+        fi
+        
+        echo -e "${GREEN}K3s instalado com sucesso!${NC}"
+        echo -e "${YELLOW}Configuração do ambiente:${NC}"
+        echo "1. O arquivo kubeconfig foi copiado para $HOME/.kube/config"
+        echo "2. As permissões foram ajustadas para seu usuário"
+        echo "3. A variável KUBECONFIG foi adicionada ao seu perfil"
+        echo ""
+        echo -e "${YELLOW}Comandos úteis:${NC}"
+        echo "  sudo systemctl status k3s    # Verificar status do serviço"
+        echo "  kubectl get nodes            # Listar nodes"
+        echo "  kubectl get pods -A          # Listar pods em todos os namespaces"
+        echo ""
+        echo -e "${YELLOW}Para desinstalar:${NC}"
+        echo "  /usr/local/bin/k3s-uninstall.sh"
+        echo ""
+        echo -e "${YELLOW}Para aplicar as alterações no ambiente atual, execute:${NC}"
+        echo "  source ~/.bashrc  # se estiver usando bash"
+        echo "  source ~/.zshrc   # se estiver usando zsh"
+    else
+        echo -e "${RED}Erro na instalação do K3s${NC}"
+        echo -e "${YELLOW}Verifique os logs do sistema:${NC}"
+        echo "  sudo journalctl -xeu k3s"
+    fi
 }
 
 # Function to VSCodium
@@ -310,11 +385,33 @@ install_vagrant() {
 install_krew() {
     sudo apt-get install git -y
     (
-        set -x; cd "$(mktemp -d)" && OS="$(uname | tr '[:upper:]' '[:lower:]')" && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && KREW="krew-${OS}_${ARCH}" && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew
-        echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
+        curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v0.4.4/krew-linux_amd64.tar.gz" && tar zxvf krew-linux_amd64.tar.gz && ./krew-linux_amd64 install krew
+        rm -f krew-linux_amd64.tar.gz
+        # Verifica qual shell está sendo usado
+        if [ -n "$ZSH_VERSION" ]; then
+            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.zshrc
+        elif [ -n "$BASH_VERSION" ]; then
+            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
+        fi
+        
         echo -e "${GREEN}Krew instalado com sucesso!${NC}"
+
+        # Pergunta se deseja instalar plugins do krew
+        read -p "Deseja instalar plugins do krew em algum cluster Kubernetes? (s/n): " install_plugins
+        
+        if [ "$install_plugins" = "s" ] || [ "$install_plugins" = "S" ]; then
+            echo "Instalando plugins do krew..."
+            kubectl krew index add kvaps https://github.com/kvaps/krew-index
+            kubectl krew install kvaps/node-shell
+            echo -e "${GREEN}Plugins do krew instalados com sucesso!${NC}"
+            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
+        else
+            echo "Instalação de plugins do krew ignorada."
+            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
+        fi
     )
 }
+
 install_virtualbox() {
     # Add VirtualBox repository key
     #wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add -
@@ -342,63 +439,232 @@ install_virtualbox() {
 
     echo "You must log out and log back in for user group changes to take effect."
 }
+# Function to install ArgoCD
+install_argocd() {
+    echo -e "${YELLOW}Baixando ArgoCD...${NC}"
+    sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 2>&1 | while read -n 1 data; do
+        echo -n "."
+    done
+    echo ""
+    echo -e "${YELLOW}Download do ArgoCD concluído!${NC}"
+    sudo chmod +x /usr/local/bin/argocd
+    echo -e "${GREEN}ArgoCD instalado com sucesso!${NC}"
+}
+# FUNÇÃO TERRAGRUNT
+install_terragrunt() {
+    echo -e "${YELLOW}Instalando Terragrunt...${NC}"
+    
+    # Verifica se o Terragrunt já está instalado
+    if command -v terragrunt &> /dev/null; then
+        CURRENT_VERSION=$(terragrunt --version | cut -d' ' -f3)
+        echo "Terragrunt versão ${CURRENT_VERSION} já está instalado."
+        echo ""
+        echo "O que você deseja fazer?"
+        echo "1 - Manter a versão atual (${CURRENT_VERSION})"
+        echo "2 - Atualizar para a última versão estável"
+        read -p "Escolha uma opção (1-2): " tg_option
 
-# Function to install all tools
+        case $tg_option in
+            1)
+                echo "Mantendo versão atual ${CURRENT_VERSION}"
+                return
+                ;;
+            2)
+                echo "Atualizando para a última versão..."
+                ;;
+            *)
+                echo "Opção inválida"
+                return 1
+                ;;
+        esac
+    fi
+
+    # Obtém a última versão do Terragrunt
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+    
+    echo -e "${YELLOW}Baixando Terragrunt versão ${LATEST_VERSION}...${NC}"
+    
+    # Download do binário
+    sudo curl -L -o /usr/local/bin/terragrunt \
+        "https://github.com/gruntwork-io/terragrunt/releases/download/v${LATEST_VERSION}/terragrunt_linux_amd64"
+    
+    # Adiciona permissão de execução
+    sudo chmod +x /usr/local/bin/terragrunt
+    
+    # Configura o auto-complete
+    terragrunt --install-autocomplete
+    
+    # Verifica a instalação
+    INSTALLED_VERSION=$(terragrunt --version)
+    echo -e "${GREEN}✅ Terragrunt ${INSTALLED_VERSION} instalado com sucesso!${NC}"
+}
+
+# Função para instalar o KIND
+install_kind() {
+    echo "Verificando se o KIND está instalado..."
+    if ! command -v kind &> /dev/null; then
+        echo "Instalando KIND..."
+        
+        # Detecta a arquitetura do sistema
+        ARCH=$(uname -m)
+        case $ARCH in
+            x86_64)
+                ARCH_TAG="amd64"
+                ;;
+            aarch64)
+                ARCH_TAG="arm64"
+                ;;
+            *)
+                echo "Arquitetura não suportada: $ARCH"
+                return 1
+                ;;
+        esac
+        
+        # Baixa a última versão do KIND
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.25.0/kind-linux-$ARCH_TAG
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        
+        # Verifica se a instalação foi bem sucedida
+        if ! command -v kind &> /dev/null; then
+            echo -e "${RED}Erro ao instalar KIND${NC}"
+            return 1
+        fi
+    else
+        echo "KIND já está instalado."
+        kind version
+    fi
+
+    # Pergunta se deseja criar um cluster
+    echo -e "\n${YELLOW}Deseja criar um cluster Kubernetes?${NC}"
+    echo "1 - Criar cluster simples (1 nó)"
+    echo "2 - Criar cluster multi-nós (1 control-plane + 3 workers)"
+    echo "3 - Não criar cluster agora"
+    read -p "Escolha uma opção (1-3): " cluster_option
+
+    case $cluster_option in
+        1)
+            echo -e "${YELLOW}Criando cluster simples...${NC}"
+            kind create cluster --name kind-single
+            echo -e "${GREEN}Cluster simples criado com sucesso!${NC}"
+            ;;
+        2)
+            echo -e "${YELLOW}Criando cluster multi-nós...${NC}"
+            # Cria arquivo de configuração
+            cat << EOF > $HOME/kind-4nodes.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    listenAddress: "0.0.0.0"
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    listenAddress: "0.0.0.0"
+    protocol: TCP
+  - containerPort: 8080
+    hostPort: 8080
+    listenAddress: "0.0.0.0"
+    protocol: TCP
+- role: worker
+- role: worker
+- role: worker
+EOF
+            kind create cluster --name kind-multinodes --config $HOME/kind-4nodes.yaml
+            echo -e "${GREEN}Cluster multi-nós criado com sucesso!${NC}"
+            ;;
+        3)
+            echo -e "${YELLOW}Instalação concluída sem criar cluster.${NC}"
+            ;;
+        *)
+            echo -e "${RED}Opção inválida${NC}"
+            ;;
+    esac
+
+    if [ "$cluster_option" != "3" ]; then
+        echo -e "\n${YELLOW}Clusters disponíveis:${NC}"
+        kind get clusters
+        echo -e "\n${YELLOW}Para interagir com o cluster, use: kubectl get nodes${NC}"
+    fi
+}
+
+########################################### Function to install all tools ###################################################
 install_all() {
-    install_vscodium
-    install_docker
-    install_kubectl
     install_ansible
-    install_terraform
-    install_jenkins
     install_awscli
     install_azurecli
-    install_gcloud
-    install_helm
+    install_azdevcli
+    install_azcopy
+    install_docker
     install_gitlab_runner
-    install_vault
+    install_gcloud
     install_consul
-    install_infracost
-    install_k9s
-    install_minikube
-    install_k3s
-    install_postman
-    install_kustomize
-    install_insomnia
+    install_packer
+    install_vault
     install_vagrant
+    install_helm
+    install_infracost
+    install_k3s
+    install_k9s
     install_krew
+    install_kubectl
+    install_kustomize
+    install_minikube
+    install_kind
+    install_terraform
     install_terraform_docs
+    install_argocd
+    install_jenkins
+    install_insomnia
+    install_postman
+    install_vscodium
     install_virtualbox
     echo -e "${GREEN}Todas as ferramentas instaladas com sucesso!${NC}"
 }
 
+
+
 case $tool_choice in
-    1) install_docker ;;
-    2) install_kubectl ;;
-    3) install_ansible ;;
-    4) install_terraform ;;
-    5) install_terraform_docs ;;
-    6) install_jenkins ;;
-    7) install_awscli ;;
-    8) install_azurecli ;;
-    9) install_azcopy ;;
-    10) install_gcloud ;;
-    11) install_helm ;;
-    12) install_gitlab_runner ;;
-    13) install_vault ;;
-    14) install_consul ;;
-    15) install_packer ;;
-    16) install_infracost ;;
-    17) install_k9s ;;
-    18) install_minikube ;;
-    19) install_k3s ;;
-    20) install_vscodium ;;
-    21) install_postman ;;
-    22) install_kustomize ;;
-    23) install_insomnia ;;
-    24) install_vagrant ;;
-    25) install_krew ;;
-    26) install_virtualbox ;;
-    27) install_all ;;
+    1) install_ansible ;;
+    2) install_awscli ;;
+    3) install_azurecli ;;
+    4) install_azdevcli ;;
+    5) install_azcopy ;;
+    6) install_docker ;;
+    7) install_gitlab_runner ;;
+    8) install_gcloud ;;
+    9) install_consul ;;
+    10) install_packer ;;
+    11) install_vault ;;
+    12) install_vagrant ;;
+    13) install_helm ;;
+    14) install_infracost ;;
+    15) install_k3s ;;
+    16) install_k9s ;;
+    17) install_krew ;;
+    18) install_kubectl ;;
+    19) install_kustomize ;;
+    20) install_minikube ;;
+    21) install_kind ;;
+    22) install_terraform ;;
+    23) install_terraform_docs ;;
+    24) install_argocd ;;
+    25) install_terragrunt ;;
+    26) install_jenkins ;;
+    27) install_insomnia ;;
+    28) install_postman ;;
+    29) install_vscodium ;;
+    30) install_virtualbox ;;
+    00) install_all ;;
     *) echo -e "${RED}Opção inválida, saindo...${NC}" ;;
 esac
+
