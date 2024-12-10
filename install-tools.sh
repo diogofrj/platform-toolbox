@@ -17,34 +17,36 @@ echo " 1 - Ansible 📜"
 echo " 2 - AWS CLI ☁️" 
 echo " 3 - Azure CLI ☁️"
 echo " 4 - Azure Developer CLI 🔧"
-echo " 5 - AzCopy 📡"
-echo " 6 - Docker + LazyDocker 🐳"
-echo " 7 - GitLab Runner 🏃‍♂️"
-echo " 8 - Google Cloud SDK ☁️"
-echo " 9 - HashiCorp Consul 🌐"
-echo " 10 - HashiCorp Packer 💿"
-echo " 11 - HashiCorp Vault 🔐"
-echo " 12 - HashiCorp Vagrant 🛠️"
-echo " 13 - Helm ⛵"
-echo " 14 - Infracost 💰"
-echo " 15 - k3s 🐍"
-echo " 16 - k9s 👀"
-echo " 17 - Krew 🐶"
-echo " 18 - kubectl ☸️"
-echo " 19 - Kustomize 🔧"
-echo " 20 - minikube 🏗️"
-echo " 21 - KIND 🐶"
-echo " 22 - Terraform 🌍"
-echo " 23 - Terraform-docs 📜"
-echo " 24 - ArgoCD 📜"
-echo " 25 - Terragrunt 📜"
+echo " 5 - Azure Quick Review 🔍"
+echo " 6 - AzCopy 📡"
+echo " 7 - Docker + LazyDocker 🐳"
+echo " 8 - GitLab Runner 🏃‍♂️"
+echo " 9 - Google Cloud SDK ☁️"
+echo " 10 - HashiCorp Consul 🌐"
+echo " 11 - HashiCorp Packer 💿"
+echo " 12 - HashiCorp Vault 🔐"
+echo " 13 - HashiCorp Vagrant 🛠️"
+echo " 14 - Helm ⛵"
+echo " 15 - Infracost 💰"
+echo " 16 - k3s 🐍"
+echo " 17 - k9s 👀"
+echo " 18 - Krew 🐶"
+echo " 19 - kubectl ☸️"
+echo " 20 - Kustomize 🔧"
+echo " 21 - minikube 🏗️"
+echo " 22 - KIND 🐶"
+echo " 23 - HashiCorp Terraform 🌍"
+echo " 24 - Terraform Tools | Checkov 🔍"
+echo " 25 - Terraform-docs 📜"
+echo " 26 - ArgoCD 📜"
+echo " 27 - Terragrunt 📜"
 echo -e "${YELLOW}Web Tools:${NC}"
-echo " 26 - Jenkins 🏗️"
+echo " 28 - Jenkins 🏗️"
 echo -e "${YELLOW}UI Desktop Tools:${NC}"
-echo " 27 - Insomnia 📡"
-echo " 28 - Postman 📮"
-echo " 29 - VS Codium 🗒️"
-echo " 30 - VirtualBox 💾"
+echo " 29 - Insomnia 📡"
+echo " 30 - Postman 📮"
+echo " 31 - VS Codium 🗒️"
+echo " 32 - VirtualBox 💾"
 echo " 00 - Install ALL tools"
 echo ""
 read -p "Enter the number corresponding to your choice: " tool_choice
@@ -163,6 +165,15 @@ install_terraform() {
     echo -e "${GREEN}✅ Terraform ${INSTALLED_VERSION} instalado com sucesso!${NC}"
 }
 
+install_terraform_tools() {
+    echo -e "${YELLOW}Instalando Checkov...${NC}"
+    pipx install checkov
+    echo -e "${YELLOW}Instalando Terraform-docs...${NC}"
+    install_terraform_docs
+    echo -e "${GREEN}Terraform Tools instalados com sucesso!${NC}"
+}
+
+
 install_terraform_docs() {
     curl -sSLo /tmp/terraform-docs.tar.gz https://terraform-docs.io/dl/v0.19.0/terraform-docs-v0.19.0-$(uname)-amd64.tar.gz
     if [ $? -ne 0 ]; then
@@ -199,6 +210,15 @@ install_azurecli() {
 install_azdevcli() {
     sudo curl -fsSL https://aka.ms/install-azd.sh | bash
     echo -e "${GREEN}Azure Developer CLI instalado com sucesso!${NC}"
+}
+
+install_azqr() {
+    latest_azqr=$(curl -sL https://api.github.com/repos/Azure/azqr/releases/latest | jq -r ".tag_name" | cut -c1-)
+    wget https://github.com/Azure/azqr/releases/download/$latest_azqr/azqr-ubuntu-latest-amd64 -O azqr
+    chmod +x azqr
+    sudo mv azqr /usr/local/bin/azqr
+    echo -e "${GREEN}Azure Quick Review instalado com sucesso!${NC}"
+    echo -e "${YELLOW}Usage: https://azure.github.io/azqr/docs/usage/${NC}"
 }
 
 # Function to install AzCopy
@@ -603,6 +623,7 @@ install_all() {
     install_awscli
     install_azurecli
     install_azdevcli
+    install_azqr
     install_azcopy
     install_docker
     install_gitlab_runner
@@ -621,6 +642,7 @@ install_all() {
     install_minikube
     install_kind
     install_terraform
+    install_terraform_tools
     install_terraform_docs
     install_argocd
     install_jenkins
@@ -638,32 +660,34 @@ case $tool_choice in
     2) install_awscli ;;
     3) install_azurecli ;;
     4) install_azdevcli ;;
-    5) install_azcopy ;;
-    6) install_docker ;;
-    7) install_gitlab_runner ;;
-    8) install_gcloud ;;
-    9) install_consul ;;
-    10) install_packer ;;
-    11) install_vault ;;
-    12) install_vagrant ;;
-    13) install_helm ;;
-    14) install_infracost ;;
-    15) install_k3s ;;
-    16) install_k9s ;;
-    17) install_krew ;;
-    18) install_kubectl ;;
-    19) install_kustomize ;;
-    20) install_minikube ;;
-    21) install_kind ;;
-    22) install_terraform ;;
-    23) install_terraform_docs ;;
-    24) install_argocd ;;
-    25) install_terragrunt ;;
-    26) install_jenkins ;;
-    27) install_insomnia ;;
-    28) install_postman ;;
-    29) install_vscodium ;;
-    30) install_virtualbox ;;
+    5) install_azqr ;;
+    6) install_azcopy ;;
+    7) install_docker ;;
+    8) install_gitlab_runner ;;
+    9) install_gcloud ;;
+    10) install_consul ;;
+    11) install_packer ;;
+    12) install_vault ;;
+    13) install_vagrant ;;
+    14) install_helm ;;
+    15) install_infracost ;;
+    16) install_k3s ;;
+    17) install_k9s ;;
+    18) install_krew ;;
+    19) install_kubectl ;;
+    20) install_kustomize ;;
+    21) install_minikube ;;
+    22) install_kind ;;
+    23) install_terraform ;;
+    24) install_terraform_docs ;;
+    25) install_terraform_tools ;;
+    26) install_argocd ;;
+    27) install_terragrunt ;;
+    28) install_jenkins ;;
+    29) install_insomnia ;;
+    30) install_postman ;;
+    31) install_vscodium ;;
+    32) install_virtualbox ;;
     00) install_all ;;
     *) echo -e "${RED}Opção inválida, saindo...${NC}" ;;
 esac
