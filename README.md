@@ -1,4 +1,4 @@
-# 🚀 Platform Engineer Toolbox for Ubuntu
+# 🚀 Platform Engineer Toolbox for Ubuntu / Mint
 
 Bem-vindo ao **Platform Engineer Toolbox for Ubuntu/Mint**, um script que automatiza a instalação de ferramentas essenciais para qualquer profissional em um sistema Ubuntu/Mint. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas Cloud Platform Engineer/DevOps/SRE em suas máquinas.
 
