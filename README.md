@@ -1,6 +1,6 @@
 # 🚀 Platform Engineer Toolbox for Ubuntu
 
-Bem-vindo ao **Platform Engineer Toolbox for Ubuntu**, um script que automatiza a instalação de ferramentas essenciais para qualquer profissional em um sistema Ubuntu. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas Cloud Platform Engineer/DevOps/SRE em suas máquinas.
+Bem-vindo ao **Platform Engineer Toolbox for Ubuntu/Mint**, um script que automatiza a instalação de ferramentas essenciais para qualquer profissional em um sistema Ubuntu/Mint. Este projeto foi projetado para simplificar o processo de configuração para aqueles que precisam instalar e configurar rapidamente ferramentas Cloud Platform Engineer/DevOps/SRE em suas máquinas.
 
 ## 📖 Índice
 
@@ -16,8 +16,7 @@ Bem-vindo ao **Platform Engineer Toolbox for Ubuntu**, um script que automatiza 
 ## 🛠️ Introdução
 
 Este repositório contém:
-- Um script Bash (`install_tools.sh`) que instala ferramentas populares de DevOps/SRE em uma máquina Ubuntu.
-- Um script Bash (`install-apps.sh`) que instala aplicações populares e de desenvolvimento em uma máquina Ubuntu.
+- Um script Bash (`install_tools.sh`) que instala ferramentas populares de Plataformas DevOps/SRE em uma máquina Ubuntu.
 - Um arquivo de configuração do Vagrant (`Vagrantfile`) para provisionar uma máquina virtual Ubuntu com um clone deste repositório para testes.
 Seja configurando um ambiente de desenvolvimento novo ou configurando um pipeline de CI/CD, este script ajuda você a começar rapidamente.
 
@@ -25,42 +24,69 @@ Seja configurando um ambiente de desenvolvimento novo ou configurando um pipelin
 
 Os scripts instalam as seguintes ferramentas e outras aplicações:
 
-### Command Line Tools:
-- 📜 **Ansible**: Ferramenta de gerenciamento de configuração
-- ☁️ **AWS CLI**: Interface de linha de comando da AWS
-- ☁️ **Azure CLI**: Interface de linha de comando do Azure
-- 📡 **AzCopy**: Ferramenta de transferência de dados do Azure
-- 🐳 **Docker + LazyDocker**: Plataforma de containerização
-- 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
-- ☁️ **Google Cloud SDK**: SDK do Google Cloud Platform
+### HashiCorp Tools (10-14):
 - 🌐 **HashiCorp Consul**: Service mesh e descoberta de serviços
 - 💿 **HashiCorp Packer**: Criação automatizada de imagens
 - 🔐 **HashiCorp Vault**: Gerenciador de segredos
 - 🛠️ **HashiCorp Vagrant**: Gerenciador de máquinas virtuais
-- ⛵ **Helm**: Gerenciador de pacotes para Kubernetes
+- 🌍 **HashiCorp Terraform**: Software de infraestrutura como código
+
+### Terraform Tools (20-26):
+- 🔍 **Checkov**: Scanner de segurança para Terraform
+- 📜 **Terraform-docs**: Gerador de documentação para Terraform
+- 📜 **Terragrunt**: CLI do Terraform
+- 📜 **Terramaid**: Gerador de diagramas para Terraform
+- 📜 **Tfswitch**: Gerenciador de versões do Terraform
 - 💰 **Infracost**: Estimativa de custos de infraestrutura
+- 📜 **TFLint**: Linter para Terraform
+
+### Cloud Tools (30-35):
+- ☁️ **Azure CLI**: Interface de linha de comando da Azure
+- 🔧 **Azure Developer CLI**: CLI para desenvolvedores Azure
+- 🔍 **Azure Quick Review**: Ferramenta de revisão rápida Azure
+- 📡 **AzCopy**: Ferramenta de transferência de dados do Azure
+- ☁️ **AWS CLI**: Interface de linha de comando da AWS
+- ☁️ **Google Cloud SDK**: SDK do Google Cloud Platform
+
+### Kubernetes Tools (40-46):
+- ☸️ **kubectl + Krew**: Ferramenta de linha de comando para Kubernetes
+- 🔧 **Kustomize**: Gerenciador de configuração Kubernetes
 - 🐍 **k3s**: Distribuição leve do Kubernetes
 - 👀 **k9s**: Interface TUI para Kubernetes
-- 🐶 **Krew**: Gerenciador de plugins do kubectl
-- ☸️ **Kubernetes (kubectl)**: Ferramenta de linha de comando para controlar clusters Kubernetes
-- 🔧 **Kustomize**: Gerenciador de configuração Kubernetes
-- 🏗️ **minikube**: Cluster Kubernetes local
-- 🌍 **Terraform**: Software de infraestrutura como código
-- 📜 **Terraform-docs**: Gerador de documentação para Terraform
+- ⛵ **Helm**: Gerenciador de pacotes para Kubernetes
+- 🐶 **Minikube**: Cluster Kubernetes local
+- 🐶 **KIND**: Kubernetes em Docker
 
-### Web Tools:
+### Other Tools (50-54):
+- 📜 **Ansible**: Ferramenta de gerenciamento de configuração
+- 🐳 **Docker + LazyDocker**: Plataforma de containerização
+- 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
+- 📜 **ArgoCD**: Ferramenta GitOps
+- 📜 **GitHub CLI**: Interface de linha de comando do GitHub
+
+### Web Tools (60):
 - ⚙️ **Jenkins**: Servidor de automação para CI/CD
 
-### UI Desktop Tools:
+### UI Desktop Tools (70-73):
 - 📡 **Insomnia**: Cliente de API REST
 - 📮 **Postman**: Plataforma de API
 - 🗒️ **VS Codium**: Editor de código
 - 💾 **VirtualBox**: Gerenciador de máquinas virtuais
-Você pode personalizar os scripts para incluir ou excluir ferramentas específicas conforme suas necessidades.
+
+### Opções de Instalação em Grupo (90-99):
+- 90: Instalar TODOS os pré-requisitos
+- 91: Instalar TODAS as ferramentas HashiCorp
+- 92: Instalar TODAS as ferramentas Terraform
+- 93: Instalar TODAS as ferramentas Cloud
+- 94: Instalar TODAS as ferramentas Kubernetes
+- 95: Instalar TODAS as Other Tools
+- 96: Instalar TODAS as Web Tools
+- 97: Instalar TODAS as UI Desktop Tools
+- 99: Instalar TODAS as ferramentas
 
 ## 🧑‍💻 Pré-requisitos
 
-- Uma máquina rodando **Ubuntu 22.04** ou posterior
+- Uma máquina rodando **Ubuntu 24.04** ou superior e Mint 22 ou superior
 - Privilégios sudo para instalar pacotes de software
 
 ## ⚙️ Instalação
@@ -93,7 +119,7 @@ O script cuidará da instalação dos pacotes e dependências necessários.
 
 ## 🏃 Uso
 
-Depois que o script terminar de executar, as ferramentas DevOps estarão instaladas e prontas para uso. Você pode começar a usá-las de acordo com os requisitos do seu projeto.
+Depois que o script terminar de executar, as ferramentas estarão instaladas e prontas para uso. Você pode começar a usá-las de acordo com os requisitos do seu projeto.
 
 Por exemplo:
 
@@ -168,4 +194,4 @@ Se você gostaria de apoiar meu trabalho, você pode me pagar um café. Obrigado
 
 ## 🫵🏻 **Agradecimentos**
 
-Este código foi inspirado no projeto [DevOps Tools on Ubuntu](https://github.com/francotel/devops-tools-on-ubuntu)   
+Este código foi inspirado no projeto [DevOps Tools on Ubuntu](https://github.com/francotel/devops-tools-on-ubuntu)

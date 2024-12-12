@@ -12,206 +12,441 @@ NC='\033[0m'
 echo ""
 echo -e "${GREEN}Instalando ferramentas necessárias para o Platform Engineer Toolbox${NC}"
 echo ""
-echo -e "${YELLOW}Command Line Tools:${NC}"
-echo " 1 - Ansible 📜"
-echo " 2 - AWS CLI ☁️" 
-echo " 3 - Azure CLI ☁️"
-echo " 4 - Azure Developer CLI 🔧"
-echo " 5 - Azure Quick Review 🔍"
-echo " 6 - AzCopy 📡"
-echo " 7 - Docker + LazyDocker 🐳"
-echo " 8 - GitLab Runner 🏃‍♂️"
-echo " 9 - Google Cloud SDK ☁️"
+echo -e "${YELLOW}Pre-requisitos:${NC}"
+echo " 1 - jq"
+echo " 2 - curl"
+echo " 3 - git"
+echo " 4 - unzip"
+echo ""
+echo -e "${YELLOW}HashiCorp Tools:${NC}"
 echo " 10 - HashiCorp Consul 🌐"
 echo " 11 - HashiCorp Packer 💿"
 echo " 12 - HashiCorp Vault 🔐"
 echo " 13 - HashiCorp Vagrant 🛠️"
-echo " 14 - Helm ⛵"
-echo " 15 - Infracost 💰"
-echo " 16 - k3s 🐍"
-echo " 17 - k9s 👀"
-echo " 18 - Krew 🐶"
-echo " 19 - kubectl ☸️"
-echo " 20 - Kustomize 🔧"
-echo " 21 - minikube 🏗️"
-echo " 22 - KIND 🐶"
-echo " 23 - HashiCorp Terraform 🌍"
-echo " 24 - Terraform Tools | Checkov 🔍"
-echo " 25 - Terraform-docs 📜"
-echo " 26 - ArgoCD 📜"
-echo " 27 - Terragrunt 📜"
-echo -e "${YELLOW}Web Tools:${NC}"
-echo " 28 - Jenkins 🏗️"
-echo -e "${YELLOW}UI Desktop Tools:${NC}"
-echo " 29 - Insomnia 📡"
-echo " 30 - Postman 📮"
-echo " 31 - VS Codium 🗒️"
-echo " 32 - VirtualBox 💾"
-echo " 00 - Install ALL tools"
+echo " 14 - HashiCorp Terraform 🌍"
 echo ""
-read -p "Enter the number corresponding to your choice: " tool_choice
+echo -e "${YELLOW}Terraform Tools:${NC}"
+echo " 20 - Checkov (Terraform Security Scanner) 🔍"
+echo " 21 - Terraform-docs (Terraform Documentation Generator) 📜"
+echo " 22 - Terragrunt (Terraform CLI) 📜"
+echo " 23 - Terramaid (Terraform Diagrammer) 📜"
+echo " 24 - Tfswitch (Terraform Version Manager) 📜"
+echo " 25 - Infracost (Terraform Cost Estimation) 💰"
+echo " 26 - tflint (Terraform Linter) 📜"
+echo ""
+echo -e "${YELLOW}Cloud Tools:${NC}"
+echo " 30 - Azure CLI (Azure Command Line Interface) ☁️"
+echo " 31 - Azure Developer CLI (Azure Developer CLI) 🔧"
+echo " 32 - Azure Quick Review (Azure Quick Review) 🔍"
+echo " 33 - AzCopy (Azure Storage CLI) 📡"
+echo " 34 - AWS CLI (Amazon Web Services Command Line Interface) ☁️" 
+echo " 35 - Google Cloud SDK (Google Cloud SDK) ☁️"
+echo ""
+echo -e "${YELLOW}Kubernetes Tools:${NC}"
+echo " 40 - kubectl + Krew (Kubectl Plugin Manager) ☸️"
+echo " 41 - Kustomize (Kubernetes Customization) 🔧"
+echo " 42 - k3s (Kubernetes in Docker) 🐍"
+echo " 43 - k9s (Kubernetes CLI) 👀"
+echo " 44 - Helm (Kubernetes Package Manager) ⛵"
+echo " 45 - Minikube (Kubernetes in Docker) 🐶"
+echo " 46 - KIND (Kubernetes in Docker) 🐶"
+echo ""
+echo -e "${YELLOW}Other Tools:${NC}"
+echo " 50 - Ansible (Automation Tool) 📜"
+echo " 51 - Docker + LazyDocker (Docker Container Manager) 🐳"
+echo " 52 - GitLab Runner (CI/CD) 🏃‍♂️"
+echo " 53 - ArgoCD (GitOps) 📜"
+echo " 54 - Github CLI (Github Command Line Interface) 📜"
+echo ""
+echo -e "${YELLOW}Web Tools:${NC}"
+echo " 60 - Jenkins (CI/CD) 🏗️"
+echo ""
+echo -e "${YELLOW}UI Desktop Tools:${NC}"
+echo " 70 - Insomnia (API Client) 📡"
+echo " 71 - Postman (API Client) 📮"
+echo " 72 - VS Codium (Code Editor) 🗒️"
+echo " 73 - VirtualBox (Virtual Machine Manager) 💾"
+echo ""
+echo -e "${YELLOW}Opções de Instalação em Grupo:${NC}"
+echo " 90 - Instalar TODOS os pré-requisitos"
+echo " 91 - Instalar TODAS as ferramentas HashiCorp 🏢"
+echo " 92 - Instalar TODAS as ferramentas Terraform 🌍"
+echo " 93 - Instalar TODAS as ferramentas Cloud ☁️"
+echo " 94 - Instalar TODAS as ferramentas Kubernetes ⛵"
+echo " 95 - Instalar TODAS as Other Tools 🛠️"
+echo " 96 - Instalar TODAS as Web Tools 🌐"
+echo " 97 - Instalar TODAS as UI Desktop Tools 🖥️"
+echo " 99 - Instalar TODAS as ferramentas"
+echo ""
 
-# Function to install Docker
-install_docker() {
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-    # Add the repository to Apt sources:
-    echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-    # Start and enable Docker
-    sudo systemctl start docker
-    sudo systemctl enable docker
-    sudo usermod -aG docker $USER
-    DIR="${DIR:-"$HOME/.local/bin"}"
-    ARCH=$(uname -m)
-
-    # LazyDocker Variables
-    GITHUB_LATEST_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-    GITHUB_FILE="lazydocker_${GITHUB_LATEST_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz"
-    GITHUB_URL="https://github.com/jesseduffield/lazydocker/releases/download/${GITHUB_LATEST_VERSION}/${GITHUB_FILE}"
-
-    # LazyDocker Install
-    sudo curl -L -o lazydocker.tar.gz $GITHUB_URL
-    sudo tar xzvf lazydocker.tar.gz lazydocker
-    sudo install -Dm 755 lazydocker -t "$DIR"
-    sudo rm lazydocker lazydocker.tar.gz
-
-    echo -e "${GREEN}Docker + LazyDocker instalado com sucesso!${NC}"
+read -p "Digite o número correspondente à sua escolha: " tool_choice
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação dos pré-requisitos
+install_jq() {
+    echo -e "${GREEN}Instalando jq...${NC}"
+    sudo apt-get install jq -y
+    echo -e "${GREEN}jq instalado com sucesso!${NC}"
 }
-
-# Function to install kubectl
-install_kubectl() {
-    sudo curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-    sudo chmod +x ./kubectl
-    sudo mv ./kubectl /usr/local/bin/kubectl
-    echo -e "${GREEN}kubectl instalado com sucesso!${NC}"
+install_curl() {
+    echo -e "${GREEN}Instalando curl...${NC}"
+    sudo apt-get install curl -y
+    echo -e "${GREEN}curl instalado com sucesso!${NC}"
 }
-
-# Function to install Ansible
-install_ansible() {
-    sudo apt update
-    sudo apt install -y ansible
-    echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
+install_git() {
+    echo -e "${GREEN}Instalando git...${NC}"
+    sudo apt-get install git -y
+    echo -e "${GREEN}git instalado com sucesso!${NC}"
 }
-
-install_terraform() {
-    # Verifica se o Terraform já está instalado
-    if command -v terraform &> /dev/null; then
-        CURRENT_VERSION=$(terraform version | head -n1 | cut -d' ' -f2 | sed 's/v//')
-        echo "Terraform versão ${CURRENT_VERSION} já está instalado."
-        echo ""
-        echo "O que você deseja fazer?"
-        echo "1 - Manter a versão atual (${CURRENT_VERSION})"
-        echo "2 - Atualizar para a última versão estável"
-        echo "3 - Instalar uma versão específica"
-        echo "    Exemplo de formato: 1.5.7, 1.6.0, 1.7.2"
-        echo ""
-        read -p "Escolha uma opção (1-3): " tf_option
-
-        case $tf_option in
-            1)
-                echo "Mantendo versão atual ${CURRENT_VERSION}"
-                return
-                ;;
-            2)
-                LATEST_VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
-                VERSION=$LATEST_VERSION
-                ;;
-            3)
-                read -p "Digite a versão desejada (exemplo: 1.5.7): " VERSION
-                if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                    echo "Formato de versão inválido. Use o formato: X.Y.Z (exemplo: 1.5.7)"
-                    return 1
-                fi
-                ;;
-            *)
-                echo "Opção inválida"
-                return 1
-                ;;
-        esac
-    else
-        # Se não estiver instalado, instala a última versão
-        VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
+install_unzip() {
+    echo -e "${GREEN}Instalando unzip...${NC}"
+    sudo apt-get install unzip -y
+    echo -e "${GREEN}unzip instalado com sucesso!${NC}"
+}
+install_all_prerequisites() {
+    echo -e "${GREEN}Instalando todos os pré-requisitos...${NC}"
+    install_jq
+    install_curl
+    install_git
+    install_unzip
+    echo -e "${GREEN}Todos os pré-requisitos foram instalados com sucesso!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas HashiCorp
+install_consul() {
+    echo -e "${GREEN}Instalando HashiCorp Consul...${NC}"
+    
+    # Obtém a última versão do Consul através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/consul/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Consul${NC}"
+        return 1
     fi
 
-    echo -e "${YELLOW}Instalando Terraform versão ${VERSION}...${NC}"
+    echo -e "${YELLOW}Baixando Consul versão ${LATEST_VERSION}...${NC}"
     
-    # Faz o download e instalação
-    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-
-    sudo apt update
-    sudo apt install -y terraform-ls
-    curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-    sudo curl -LO "https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip"
-    unzip "terraform_${VERSION}_linux_amd64.zip"
-    sudo mv terraform /usr/local/bin/
-    sudo rm -f "terraform_${VERSION}_linux_amd64.zip LICENSE.txt"
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/consul/${LATEST_VERSION}/consul_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Consul. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
     
-    # Configura o auto-complete
-    terraform -install-autocomplete
-    
-    # Verifica a instalação
-    INSTALLED_VERSION=$(terraform version | head -n1)
-    echo -e "${GREEN}✅ Terraform ${INSTALLED_VERSION} instalado com sucesso!${NC}"
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "consul_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "consul_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "consul_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv consul /usr/local/bin/
+        rm -f "consul_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Consul ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Consul não foi baixado corretamente${NC}"
+        return 1
+    fi
 }
 
-install_terraform_tools() {
-    echo -e "${YELLOW}Instalando Checkov...${NC}"
-    pipx install checkov
-    echo -e "${YELLOW}Instalando Terraform-docs...${NC}"
-    install_terraform_docs
-    echo -e "${GREEN}Terraform Tools instalados com sucesso!${NC}"
+install_packer() {
+    echo -e "${GREEN}Instalando HashiCorp Packer...${NC}"
+    
+    # Obtém a última versão do Packer através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/packer/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Consul${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Packer versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/packer/${LATEST_VERSION}/packer_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Packer. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "packer_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "packer_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "packer_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv packer /usr/local/bin/
+        rm -f "packer_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Packer ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Packer não foi baixado corretamente${NC}"
+        return 1
+    fi
 }
 
+install_vault() {
+    echo -e "${GREEN}Instalando HashiCorp Vault...${NC}"
+    
+    # Obtém a última versão do Vault através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/vault/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Consul${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Vault versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/vault/${LATEST_VERSION}/vault_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Vault. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "vault_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "vault_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "vault_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv vault /usr/local/bin/
+        rm -f "vault_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Vault ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Vault não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
+
+install_vagrant() {
+    echo -e "${GREEN}Instalando HashiCorp Vagrant...${NC}"
+    
+    # Obtém a última versão do Vagrant através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/vagrant/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Consul${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Vagrant versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/vagrant/${LATEST_VERSION}/vagrant_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Vagrant. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "vagrant_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "vagrant_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "vagrant_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv vagrant /usr/local/bin/
+        rm -f "vagrant_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Vagrant ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Vagrant não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
+install_terraform() {
+    echo -e "${GREEN}Instalando HashiCorp Terraform...${NC}"
+    
+    # Obtém a última versão do Terraform através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Consul${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Terraform versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/terraform/${LATEST_VERSION}/terraform_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Terraform. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "terraform_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "terraform_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "terraform_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv terraform /usr/local/bin/
+        rm -f "terraform_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Terraform ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Terraform não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
+install_all_hashicorp() {
+    echo -e "${GREEN}Instalando todas as ferramentas HashiCorp...${NC}"
+    install_consul
+    install_packer
+    install_vault
+    install_vagrant
+    install_terraform
+    echo -e "${GREEN}Todas as ferramentas HashiCorp foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas Terraform Tools
+install_checkov() {
+    echo -e "${GREEN}Instalando Checkov...${NC}"
+    
+    # Obtém a última versão do Checkov através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/bridgecrewio/checkov/releases/latest | jq -r .tag_name)
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Checkov${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Checkov versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://github.com/bridgecrewio/checkov/releases/download/${LATEST_VERSION}/checkov_linux_X86_64.zip"; then
+        echo -e "${RED}Erro ao baixar o Checkov. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Torna o binário executável e move para /usr/local/bin
+    unzip "checkov_linux_X86_64.zip"
+    sudo mv dist/checkov /usr/local/bin/
+    rm -rf dist "checkov_linux_X86_64.zip" LICENSE.txt
+    
+    echo -e "${GREEN}Checkov ${LATEST_VERSION} instalado com sucesso!${NC}"
+}
 
 install_terraform_docs() {
-    curl -sSLo /tmp/terraform-docs.tar.gz https://terraform-docs.io/dl/v0.19.0/terraform-docs-v0.19.0-$(uname)-amd64.tar.gz
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}Erro ao baixar terraform-docs. Verifique sua conexão com a internet.${NC}"
+    echo -e "${GREEN}Instalando Terraform Docs...${NC}"
+    
+    # Obtém a última versão do Terraform Docs através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | jq -r .tag_name)
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Terraform Docs${NC}"
         return 1
     fi
-    tar -xzf /tmp/terraform-docs.tar.gz -C /tmp
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}Erro ao descompactar terraform-docs.${NC}"
+
+    echo -e "${YELLOW}Baixando Terraform Docs versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://github.com/terraform-docs/terraform-docs/releases/download/${LATEST_VERSION}/terraform-docs-${LATEST_VERSION}-linux-amd64.tar.gz"; then
+        echo -e "${RED}Erro ao baixar o Terraform Docs. Verifique sua conexão com a internet.${NC}"
         return 1
     fi
-    chmod +x /tmp/terraform-docs
-    sudo mv /tmp/terraform-docs /usr/local/bin/terraform-docs
-    echo -e "${GREEN}Terraform-docs instalado com sucesso!${NC}"
+
+    # Torna o binário executável e move para /usr/local/bin
+    tar -xzf "terraform-docs-${LATEST_VERSION}-linux-amd64.tar.gz"
+    sudo mv terraform-docs /usr/local/bin/
+    rm -rf "terraform-docs-${LATEST_VERSION}-linux-amd64.tar.gz" LICENSE*
+    
+    echo -e "${GREEN}Terraform Docs ${LATEST_VERSION} instalado com sucesso!${NC}"
 }
 
-# Function to install AWS CLI
-install_awscli() {
-    sudo apt install zip -y
-    sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    sudo unzip awscliv2.zip
-    sudo ./aws/install
-    sudo rm -rf awscliv2.zip aws
-    echo -e "${GREEN}AWS CLI instalado com sucesso!${NC}"
+install_terragrunt() {
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
+    
+    echo -e "${YELLOW}Baixando Terragrunt versão ${LATEST_VERSION}...${NC}"
+    
+    # Download do binário
+    sudo curl -L -o /usr/local/bin/terragrunt \
+        "https://github.com/gruntwork-io/terragrunt/releases/download/v${LATEST_VERSION}/terragrunt_linux_amd64"
+    
+    # Adiciona permissão de execução
+    sudo chmod +x /usr/local/bin/terragrunt
+    
+    # Configura o auto-complete
+    terragrunt --install-autocomplete
+    
+    # Verifica a instalação
+    INSTALLED_VERSION=$(terragrunt --version)
+    echo -e "${GREEN}✅ Terragrunt ${INSTALLED_VERSION} instalado com sucesso!${NC}"
 }
 
-# Function to install Azure CLI
+install_terramaid () {
+  curl -1sLf \\n  'https://dl.cloudsmith.io/public/rosesecurity/terramaid/setup.deb.sh' \\n  | sudo -E bash
+  sudo apt-get install terramaid
+  #sudo mv /usr/bin/Terramaid /usr/local/bin/terramaid || true
+  INSTALLED_VERSION=$(terramaid version)
+    echo -e "${GREEN}✅ Terramaid ${INSTALLED_VERSION} instalado com sucesso!${NC}"
+}
+
+install_tfswitch() {
+    echo -e "${GREEN}Instalando Terraform Switcher...${NC}"
+    
+    # Remove o link simbólico existente do Terraform, se houver
+    if [ -L "/usr/local/bin/terraform" ]; then
+        sudo unlink /usr/local/bin/terraform
+        sudo rm -f /usr/local/bin/terraform
+        sudo rm -rf /home/$USER/.terraform.versions
+    fi
+
+    # Obtém a última versão do Terraform através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/warrensbox/terraform-switcher/releases/latest | jq -r .tag_name)
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Terraform Switcher${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Terraform Switcher versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://github.com/warrensbox/terraform-switcher/releases/download/${LATEST_VERSION}/terraform-switcher_${LATEST_VERSION}_linux_amd64.tar.gz"; then
+        echo -e "${RED}Erro ao baixar o Terraform Switcher. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "terraform-switcher_${LATEST_VERSION}_linux_amd64.tar.gz" ] && [ -s "terraform-switcher_${LATEST_VERSION}_linux_amd64.tar.gz" ]; then
+        tar -xzf "terraform-switcher_${LATEST_VERSION}_linux_amd64.tar.gz"
+        sudo mv tfswitch /usr/local/bin/
+        rm -rf "terraform-switcher_${LATEST_VERSION}_linux_amd64.tar.gz" LICENSE* CHANGELOG* README.md
+        # sudo unlink /usr/local/bin/terraform
+        echo -e "${GREEN}Terraform Switcher ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Terraform Switcher não foi baixado corretamente${NC}"
+        return 1
+    fi
+
+
+
+
+    # git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+    # # Verifica qual shell está sendo usado
+    # if [ -n "$BASH_VERSION" ]; then
+    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bashrc
+    #     echo -e "${GREEN}Configuração adicionada ao .bashrc${NC}"
+    # elif [ -n "$ZSH_VERSION" ]; then
+    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.zshrc
+    #     echo -e "${GREEN}Configuração adicionada ao .zshrc${NC}"
+    # else
+    #     echo -e "${YELLOW}Shell não identificado. Adicione manualmente ao seu arquivo de configuração:${NC}"
+    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"'
+    # fi
+    
+}
+
+install_infracost() {
+    echo "Installing Infracost..."
+    curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+    echo -e "${GREEN}Infracost instalado com sucesso!${NC}"
+}
+
+install_tflint () {
+    echo "Installing TFLint..."
+    curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+    echo -e "${GREEN}TFLint instalado com sucesso!${NC}"
+}
+
+install_all_terraform_tools() {
+    echo -e "${GREEN}Instalando todas as ferramentas Terraform...${NC}"
+    install_checkov
+    install_terraform_docs
+    install_terragrunt
+    install_terramaid
+    install_tfswitch
+    install_infracost
+    install_tflint
+    echo -e "${GREEN}Todas as ferramentas Terraform foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas Cloud Tools
 install_azurecli() {
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     echo -e "${GREEN}Azure CLI instalado com sucesso!${NC}"
 }
-
-# Function to install Azure Developer CLI
 install_azdevcli() {
     sudo curl -fsSL https://aka.ms/install-azd.sh | bash
     echo -e "${GREEN}Azure Developer CLI instalado com sucesso!${NC}"
 }
-
 install_azqr() {
     latest_azqr=$(curl -sL https://api.github.com/repos/Azure/azqr/releases/latest | jq -r ".tag_name" | cut -c1-)
     wget https://github.com/Azure/azqr/releases/download/$latest_azqr/azqr-ubuntu-latest-amd64 -O azqr
@@ -220,82 +455,75 @@ install_azqr() {
     echo -e "${GREEN}Azure Quick Review instalado com sucesso!${NC}"
     echo -e "${YELLOW}Usage: https://azure.github.io/azqr/docs/usage/${NC}"
 }
-
-# Function to install AzCopy
 install_azcopy() {
     curl -L https://aka.ms/downloadazcopy-v10-linux -o azcopy.tar.gz && tar -xvf azcopy.tar.gz && sudo cp ./azcopy_linux_amd64_*/azcopy /usr/local/bin/ && sudo chmod 755 /usr/local/bin/azcopy && rm -rf azcopy.tar.gz azcopy_linux_amd64_*
     echo -e "${GREEN}AzCopy instalado com sucesso!${NC}"
 }
-
-# Function to install Google Cloud SDK
+install_awscli() {
+    sudo apt install zip -y
+    sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    sudo unzip awscliv2.zip
+    sudo ./aws/install --update
+    sudo rm -rf awscliv2.zip aws
+    echo -e "${GREEN}AWS CLI instalado com sucesso!${NC}"
+}
 install_gcloud() {
     sudo apt install apt-transport-https ca-certificates gnupg curl -y
-    sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    sudo curl -f https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/cloud.google.gpg
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
     sudo apt update && sudo apt install google-cloud-cli -y
     echo -e "${GREEN}Google Cloud SDK instalado com sucesso!${NC}"
 }
-
-# Function to install Helm
-install_helm() {
-    sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-    sudo chmod 700 get_helm.sh
-    sudo ./get_helm.sh
-    sudo rm -f get_helm.sh
-    echo -e "${GREEN}Helm instalado com sucesso!${NC}"
+install_all_cloud_tools() {
+    echo -e "${GREEN}Instalando todas as ferramentas Cloud...${NC}"
+    install_azurecli
+    install_azdevcli
+    install_azqr
+    install_azcopy
+    install_awscli
+    install_gcloud
+    echo -e "${GREEN}Todas as ferramentas Cloud foram instaladas!${NC}"
 }
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas Kubernetes Tools
+install_kubectl() {
+    sudo curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+    echo -e "${GREEN}kubectl instalado com sucesso!${NC}"
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v0.4.4/krew-linux_amd64.tar.gz" && tar zxvf krew-linux_amd64.tar.gz && ./krew-linux_amd64 install krew
+    rm -f krew-linux_amd64.tar.gz krew-linux_amd64 LICENSE
+    # Verifica qual shell está sendo usado
+        if [ -n "$ZSH_VERSION" ]; then
+            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.zshrc
+        elif [ -n "$BASH_VERSION" ]; then
+            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
+        fi
+        
+        echo -e "${GREEN}Krew instalado com sucesso!${NC}"
 
-# Function to install GitLab Runner
-install_gitlab_runner() {
-    sudo curl -s https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
-    echo -e "${GREEN}GitLab Runner instalado com sucesso!${NC}"
+        # Pergunta se deseja instalar plugins do krew
+        read -p "Deseja instalar plugins node-shell e neat no kubectl? (s/n): " install_plugins
+        
+        if [ "$install_plugins" = "s" ] || [ "$install_plugins" = "S" ]; then
+            echo "Instalando plugins do krew..."
+            kubectl krew index add kvaps https://github.com/kvaps/krew-index
+            kubectl krew install kvaps/node-shell neat 
+            echo -e "${GREEN}Plugins do krew instalados com sucesso!${NC}"
+            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
+        else
+            echo "Instalação de plugins do krew ignorada."
+            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
+        fi
+    
+
 }
-
-# Function to install HashiCorp Vault
-install_vault() {
-    sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-    sudo apt update && sudo apt install vault -y
-    echo -e "${GREEN}HashiCorp Vault instalado com sucesso!${NC}"
+# Function to install Kustomize
+install_kustomize() {
+    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    sudo mv ./kustomize /usr/local/bin/kustomize
+    echo -e "${GREEN}Kustomize instalado com sucesso!${NC}"
 }
-
-# Function to install HashiCorp Consul
-install_consul() {
-    sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-    sudo apt update && sudo apt install consul -y
-    echo -e "${GREEN}HashiCorp Consul instalado com sucesso!${NC}"
-}
-
-# Function to install HashiCorp Packer
-install_packer() {
-    sudo wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-    sudo apt update && sudo apt install packer -y
-    echo -e "${GREEN}HashiCorp Packer instalado com sucesso!${NC}"
-}
-
-# Function to install Infracost
-install_infracost() {
-    echo "Installing Infracost..."
-    curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
-    echo -e "${GREEN}Infracost instalado com sucesso!${NC}"
-}
-
-# Function to install k9s
-install_k9s() {
-    sudo curl -sS https://webinstall.dev/k9s | bash
-    echo -e "${GREEN}k9s instalado com sucesso!${NC}"
-}
-
-# Function to install minikube
-install_minikube() {
-    sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-    sudo install minikube-linux-amd64 /usr/local/bin/minikube
-    sudo rm -f minikube-linux-amd64
-    echo -e "${GREEN}minikube instalado com sucesso!${NC}"
-}
-
 # Function to install k3s
 install_k3s() {
     # Verifica se está rodando no WSL
@@ -357,168 +585,26 @@ install_k3s() {
         echo "  sudo journalctl -xeu k3s"
     fi
 }
-
-# Function to VSCodium
-install_vscodium() {
-    wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
-    echo 'deb [signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
-    | sudo tee /etc/apt/sources.list.d/vscodium.list
-    sudo apt update && sudo apt install -y codium
-    echo -e "${GREEN}VSCodium instalado com sucesso!${NC}"
+# Function to install k9s
+install_k9s() {
+    sudo curl -sS https://webinstall.dev/k9s | bash
+    echo -e "${GREEN}k9s instalado com sucesso!${NC}"
 }
-
-# Function to install Postman
-install_postman() {
-    sudo snap install postman
-    curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-    echo -e "${GREEN}Postman e Postman CLI instalado com sucesso!${NC}"
+# Function to install Helm
+install_helm() {
+    sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    sudo chmod 700 get_helm.sh
+    sudo ./get_helm.sh
+    sudo rm -f get_helm.sh
+    echo -e "${GREEN}Helm instalado com sucesso!${NC}"
 }
-
-# Function to install Kustomize
-install_kustomize() {
-    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-    sudo mv ./kustomize /usr/local/bin/kustomize
-    echo -e "${GREEN}Kustomize instalado com sucesso!${NC}"
+# Function to install minikube
+install_minikube() {
+    sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+    sudo rm -f minikube-linux-amd64 LICENSE
+    echo -e "${GREEN}minikube instalado com sucesso!${NC}"
 }
-
-# Function to install Insomnia
-install_insomnia() {
-    # Add to sources
-    curl -1sLf 'https://packages.konghq.com/public/insomnia/setup.deb.sh' | sudo -E distro=ubuntu codename=focal bash
-    # Refresh repository sources and install Insomnia
-    sudo apt-get update
-    sudo apt-get install insomnia
-    echo -e "${GREEN}Insomnia instalado com sucesso!${NC}"
-}
-
-# Function to install Vagrant
-install_vagrant() {
-    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    sudo apt update && sudo apt install vagrant
-    echo -e "${GREEN}Vagrant instalado com sucesso!${NC}"
-}
-
-# Function to install Krew
-install_krew() {
-    sudo apt-get install git -y
-    (
-        curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v0.4.4/krew-linux_amd64.tar.gz" && tar zxvf krew-linux_amd64.tar.gz && ./krew-linux_amd64 install krew
-        rm -f krew-linux_amd64.tar.gz
-        # Verifica qual shell está sendo usado
-        if [ -n "$ZSH_VERSION" ]; then
-            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.zshrc
-        elif [ -n "$BASH_VERSION" ]; then
-            echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >>~/.bashrc
-        fi
-        
-        echo -e "${GREEN}Krew instalado com sucesso!${NC}"
-
-        # Pergunta se deseja instalar plugins do krew
-        read -p "Deseja instalar plugins do krew em algum cluster Kubernetes? (s/n): " install_plugins
-        
-        if [ "$install_plugins" = "s" ] || [ "$install_plugins" = "S" ]; then
-            echo "Instalando plugins do krew..."
-            kubectl krew index add kvaps https://github.com/kvaps/krew-index
-            kubectl krew install kvaps/node-shell
-            echo -e "${GREEN}Plugins do krew instalados com sucesso!${NC}"
-            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
-        else
-            echo "Instalação de plugins do krew ignorada."
-            echo -e "${YELLOW}Para usar o node-shell, execute: kubectl node-shell <node-name>${NC}"
-        fi
-    )
-}
-
-install_virtualbox() {
-    # Add VirtualBox repository key
-    #wget -q -O - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc | sudo apt-key add -
-    wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
-
-
-    # Add VirtualBox repository to sources list
-    sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian raring non-free contrib" >> /etc/apt/sources.list.d/virtualbox.org.list'
-
-    # Update package list and install specified VirtualBox version
-    sudo apt-get update
-    sudo apt-get install -y virtualbox
-
-    # Add current user to vboxusers group
-    sudo usermod -a -G vboxusers $(whoami)
-
-    # Get the installed VirtualBox version
-    INSTALLED_VER=$(vboxmanage --version)
-    INSTALLED_VER=${INSTALLED_VER%%r*}
-
-    # Download and install the extension pack for the installed version
-    wget -O ~/Downloads/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack http://download.virtualbox.org/virtualbox/$INSTALLED_VER/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack
-    echo "virtualbox extpack"
-    sudo vboxmanage extpack install ~/Downloads/Oracle_VM_VirtualBox_Extension_Pack-$INSTALLED_VER.vbox-extpack
-
-    echo "You must log out and log back in for user group changes to take effect."
-}
-# Function to install ArgoCD
-install_argocd() {
-    echo -e "${YELLOW}Baixando ArgoCD...${NC}"
-    sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 2>&1 | while read -n 1 data; do
-        echo -n "."
-    done
-    echo ""
-    echo -e "${YELLOW}Download do ArgoCD concluído!${NC}"
-    sudo chmod +x /usr/local/bin/argocd
-    echo -e "${GREEN}ArgoCD instalado com sucesso!${NC}"
-}
-# FUNÇÃO TERRAGRUNT
-install_terragrunt() {
-    echo -e "${YELLOW}Instalando Terragrunt...${NC}"
-    
-    # Verifica se o Terragrunt já está instalado
-    if command -v terragrunt &> /dev/null; then
-        CURRENT_VERSION=$(terragrunt --version | cut -d' ' -f3)
-        echo "Terragrunt versão ${CURRENT_VERSION} já está instalado."
-        echo ""
-        echo "O que você deseja fazer?"
-        echo "1 - Manter a versão atual (${CURRENT_VERSION})"
-        echo "2 - Atualizar para a última versão estável"
-        read -p "Escolha uma opção (1-2): " tg_option
-
-        case $tg_option in
-            1)
-                echo "Mantendo versão atual ${CURRENT_VERSION}"
-                return
-                ;;
-            2)
-                echo "Atualizando para a última versão..."
-                ;;
-            *)
-                echo "Opção inválida"
-                return 1
-                ;;
-        esac
-    fi
-
-    # Obtém a última versão do Terragrunt
-    LATEST_VERSION=$(curl -s https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | cut -c 2-)
-    
-    echo -e "${YELLOW}Baixando Terragrunt versão ${LATEST_VERSION}...${NC}"
-    
-    # Download do binário
-    sudo curl -L -o /usr/local/bin/terragrunt \
-        "https://github.com/gruntwork-io/terragrunt/releases/download/v${LATEST_VERSION}/terragrunt_linux_amd64"
-    
-    # Adiciona permissão de execução
-    sudo chmod +x /usr/local/bin/terragrunt
-    
-    # Configura o auto-complete
-    terragrunt --install-autocomplete
-    
-    # Verifica a instalação
-    INSTALLED_VERSION=$(terragrunt --version)
-    echo -e "${GREEN}✅ Terragrunt ${INSTALLED_VERSION} instalado com sucesso!${NC}"
-}
-
 # Função para instalar o KIND
 install_kind() {
     echo "Verificando se o KIND está instalado..."
@@ -617,78 +703,338 @@ EOF
     fi
 }
 
-########################################### Function to install all tools ###################################################
-install_all() {
-    install_ansible
-    install_awscli
-    install_azurecli
-    install_azdevcli
-    install_azqr
-    install_azcopy
-    install_docker
-    install_gitlab_runner
-    install_gcloud
-    install_consul
-    install_packer
-    install_vault
-    install_vagrant
-    install_helm
-    install_infracost
+
+install_all_kubernetes() {
+    echo -e "${GREEN}Instalando todas as ferramentas Kubernetes...${NC}"
+    install_kubectl
+    install_krew
+    install_kustomize
     install_k3s
     install_k9s
-    install_krew
-    install_kubectl
-    install_kustomize
+    install_helm
     install_minikube
     install_kind
-    install_terraform
-    install_terraform_tools
-    install_terraform_docs
+    echo -e "${GREEN}Todas as ferramentas Kubernetes foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas Other Tools
+install_ansible() {
+    sudo apt install python3-pip -y
+    sudo apt install pipx
+    pipx install --include-deps ansible --force
+    echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
+}
+install_docker() {
+  # Removendo instalacoes antigas
+  sudo apt autoremove -y
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove -y $pkg; done
+    # Remove pacotes antigos do Docker se existirem
+    for pkg in docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras; do
+        if dpkg -l | grep -q "^ii  $pkg "; then
+            sudo apt-get purge -y $pkg
+        fi
+    done
+
+    # Remove diretórios do Docker se existirem
+    if [ -d "/var/lib/docker" ]; then
+        sudo rm -rf /var/lib/docker
+    fi
+    if [ -d "/var/lib/containerd" ]; then
+        sudo rm -rf /var/lib/containerd
+    fi
+    if [ -f "/etc/apt/sources.list.d/docker.list" ]; then
+        sudo rm -f /etc/apt/sources.list.d/docker.list
+    fi
+    if [ -f "/etc/apt/keyrings/docker.asc" ]; then
+        sudo rm -f /etc/apt/keyrings/docker.asc
+    fi
+
+    # Instalando Docker
+    sudo apt install -y apt-transport-https ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Adicionando o repositório Docker
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+    sudo usermod -aG docker $USER
+    
+    echo -e "${GREEN}Docker instalado com sucesso!${NC}"
+    #-----------------------------------------------------
+    echo -e "${YELLOW}Instalando LazyDocker...${NC}"
+    # LazyDocker Variables
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/jesseduffield/lazydocker/releases/latest | jq -r .tag_name)
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do LazyDocker${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando LazyDocker versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://github.com/jesseduffield/lazydocker/releases/download/${LATEST_VERSION}/lazydocker_${LATEST_VERSION//v/}_Linux_x86_64.tar.gz"; then
+        echo -e "${RED}Erro ao baixar o LazyDocker. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+
+    # LazyDocker Install
+    tar xzvf "lazydocker_${LATEST_VERSION//v/}_Linux_x86_64.tar.gz" lazydocker
+    sudo mv lazydocker /usr/local/bin/
+    sudo chmod 755 /usr/local/bin/lazydocker
+    sudo rm -rf "lazydocker_${LATEST_VERSION//v/}_Linux_x86_64.tar.gz" LICENSE
+    
+    echo -e "${GREEN}Docker + LazyDocker instalado com sucesso!${NC}"
+}
+# Function to install GitLab Runner
+install_gitlab_runner() {
+    sudo curl -s https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+    sudo apt install gitlab-runner -y
+    echo -e "${GREEN}GitLab Runner instalado com sucesso!${NC}"
+}
+# Function to install ArgoCD CLI
+install_argocd() {
+    # kubectl create namespace argocd
+    # kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    # echo -e "${GREEN}ArgoCD instalado com sucesso!${NC}"
+    echo -e "${YELLOW}Baixando ArgoCD...${NC}"
+    sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 2>&1 | while read -n 1 data; do
+        echo -n "."
+    done
+    echo ""
+    echo -e "${YELLOW}Download do ArgoCD concluído!${NC}"
+    sudo chmod +x /usr/local/bin/argocd
+    echo -e "${GREEN}ArgoCD instalado com sucesso!${NC}"
+}
+install_gh() {
+    # Verifica se wget está instalado, caso contrário instala
+    if ! command -v wget &> /dev/null; then
+        sudo apt update
+        sudo apt install wget -y
+    fi
+
+    # Cria diretório para chaves e configura repositório
+    sudo mkdir -p -m 755 /etc/apt/keyrings
+    wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+    # Atualiza e instala o GitHub CLI
+    sudo apt update
+    sudo apt install gh -y
+    echo -e "${GREEN}Github CLI instalado com sucesso!${NC}"
+}
+install_all_other_tools() {
+    echo -e "${GREEN}Instalando todas as Other Tools...${NC}"
+    install_ansible
+    install_docker
+    install_gitlab_runner
     install_argocd
+    install_gh
+    echo -e "${GREEN}Todas as Other Tools foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas Web Tools
+install_jenkins() {
+    echo -e "${YELLOW}Instalando Java JDK...${NC}"
+    sudo apt update
+    sudo apt install fontconfig openjdk-17-jre -y
+    
+    echo -e "${YELLOW}Instalando Jenkins...${NC}"
+    sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install jenkins -y
+    
+    # Aguarda alguns segundos para o serviço inicializar
+    sleep 5
+    
+    # Inicia e habilita o serviço
+    sudo systemctl start jenkins.service
+    sudo systemctl enable jenkins.service
+    
+    # Verifica o status do serviço
+    if sudo systemctl is-active --quiet jenkins; then
+        echo -e "${GREEN}Jenkins instalado e iniciado com sucesso!${NC}"
+        echo -e "${YELLOW}Para acessar o Jenkins, abra o navegador e acesse: http://localhost:8080${NC}"
+        echo -e "${YELLOW}A senha inicial de administrador pode ser encontrada em: sudo cat /var/lib/jenkins/secrets/initialAdminPassword${NC}"
+        sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+    else
+        echo -e "${RED}Erro ao iniciar o Jenkins. Verifique os logs com: sudo journalctl -xeu jenkins.service${NC}"
+        return 1
+    fi
+}
+install_all_web_tools() {
+    echo -e "${GREEN}Instalando todas as Web Tools...${NC}"
     install_jenkins
+    echo -e "${GREEN}Todas as Web Tools foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Funções de instalação das ferramentas UI Desktop Tools
+# Function to install Insomnia
+install_insomnia() {
+    # Add to sources
+    curl -1sLf 'https://packages.konghq.com/public/insomnia/setup.deb.sh' | sudo -E distro=ubuntu codename=focal bash
+    # Refresh repository sources and install Insomnia
+    sudo apt-get update
+    sudo apt-get install insomnia
+    echo -e "${GREEN}Insomnia instalado com sucesso!${NC}"
+}
+# Function to install Postman
+install_postman() {
+    echo -e "${YELLOW}Instalando Postman...${NC}"
+    wget -O postman-linux-x64.tar.gz https://dl.pstmn.io/download/latest/linux_64
+    sudo mkdir -p /opt/apps
+    sudo tar -xzf postman-linux-x64.tar.gz -C /opt/apps/
+    sudo ln -sf /opt/apps/Postman/Postman /usr/local/bin/postman
+    curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+    
+    # Criar atalho no desktop
+    cat > ~/Desktop/postman.desktop << EOL
+[Desktop Entry]
+Encoding=UTF-8
+Name=Postman
+Exec=/opt/apps/Postman/Postman
+Icon=/opt/apps/Postman/app/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;
+EOL
+    
+    # Tornar o arquivo executável
+    chmod +x ~/Desktop/postman.desktop
+    
+    echo -e "${GREEN}Postman e Postman CLI instalado com sucesso!${NC}"
+    echo -e "${GREEN}Atalho criado no Desktop${NC}"
+}
+
+# Function to VSCodium
+install_vscodium() {
+    wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
+    | gpg --dearmor \
+    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg] https://download.vscodium.com/debs vscodium main' \
+    | sudo tee /etc/apt/sources.list.d/vscodium.list
+    sudo apt update && sudo apt install -y codium
+    echo -e "${GREEN}VSCodium instalado com sucesso!${NC}"
+}
+
+install_virtualbox() {
+    # Baixa o instalador do VirtualBox
+    wget https://download.virtualbox.org/virtualbox/7.1.4/VirtualBox-7.1.4-165100-Linux_amd64.run
+    
+    # Torna o arquivo executável
+    chmod +x VirtualBox-7.1.4-165100-Linux_amd64.run
+    
+    # Executa o instalador
+    sudo ./VirtualBox-7.1.4-165100-Linux_amd64.run
+    
+    # Remove o instalador após a instalação
+    rm VirtualBox-7.1.4-165100-Linux_amd64.run
+    
+    # Adiciona o usuário atual ao grupo vboxusers
+    sudo usermod -aG vboxusers $USER
+    
+    echo -e "${GREEN}VirtualBox instalado com sucesso!${NC}"
+    echo -e "${YELLOW}Você precisa fazer logout e login novamente para que as alterações de grupo tenham efeito.${NC}"
+}
+
+
+install_all_ui_tools() {
+    echo -e "${GREEN}Instalando todas as UI Desktop Tools...${NC}"
     install_insomnia
     install_postman
     install_vscodium
     install_virtualbox
-    echo -e "${GREEN}Todas as ferramentas instaladas com sucesso!${NC}"
+    echo -e "${GREEN}Todas as UI Desktop Tools foram instaladas!${NC}"
+}
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Função para instalar todas as ferramentas
+install_all() {
+    echo -e "${GREEN}Instalando TODAS as ferramentas...${NC}"
+    install_all_prerequisites
+    install_all_hashicorp
+    install_all_terraform_tools
+    install_all_cloud_tools
+    install_all_kubernetes
+    install_all_other_tools
+    install_all_web_tools
+    install_all_ui_tools
+    echo -e "${GREEN}Todas as ferramentas foram instaladas com sucesso!${NC}"
 }
 
-
-
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# Modificar o case statement para incluir as novas opções
 case $tool_choice in
-    1) install_ansible ;;
-    2) install_awscli ;;
-    3) install_azurecli ;;
-    4) install_azdevcli ;;
-    5) install_azqr ;;
-    6) install_azcopy ;;
-    7) install_docker ;;
-    8) install_gitlab_runner ;;
-    9) install_gcloud ;;
+    # Pré-requisitos
+    1) install_jq ;;
+    2) install_curl ;;
+    3) install_git ;;
+    4) install_unzip ;;
+    5) install_all_prerequisites ;;
+
+    # HashiCorp Tools
     10) install_consul ;;
     11) install_packer ;;
     12) install_vault ;;
     13) install_vagrant ;;
-    14) install_helm ;;
-    15) install_infracost ;;
-    16) install_k3s ;;
-    17) install_k9s ;;
-    18) install_krew ;;
-    19) install_kubectl ;;
-    20) install_kustomize ;;
-    21) install_minikube ;;
-    22) install_kind ;;
-    23) install_terraform ;;
-    24) install_terraform_docs ;;
-    25) install_terraform_tools ;;
-    26) install_argocd ;;
-    27) install_terragrunt ;;
-    28) install_jenkins ;;
-    29) install_insomnia ;;
-    30) install_postman ;;
-    31) install_vscodium ;;
-    32) install_virtualbox ;;
-    00) install_all ;;
-    *) echo -e "${RED}Opção inválida, saindo...${NC}" ;;
+    14) install_terraform ;;
+    
+    # Terraform Tools
+    20) install_checkov ;;
+    21) install_terraform_docs ;;
+    22) install_terragrunt ;;
+    23) install_terramaid ;;
+    24) install_tfswitch ;;
+    25) install_infracost ;;
+    26) install_tflint ;;
+    
+    # Cloud Tools
+    30) install_azurecli ;;
+    31) install_azdevcli ;;
+    32) install_azqr ;;
+    33) install_azcopy ;;
+    34) install_awscli ;;
+    35) install_gcloud ;;
+    
+    # Kubernetes Tools
+    40) install_kubectl ;;
+    41) install_kustomize ;;
+    42) install_k3s ;;
+    43) install_k9s ;;
+    44) install_helm ;;
+    45) install_minikube ;;
+    46) install_kind ;;
+    
+    # Other Tools
+    50) install_ansible ;;
+    51) install_docker ;;
+    52) install_gitlab_runner ;;
+    53) install_argocd ;;
+    54) install_gh ;;
+    # Web Tools
+    60) install_jenkins ;;
+    
+    # UI Desktop Tools
+    70) install_insomnia ;;
+    71) install_postman ;;
+    72) install_vscodium ;;
+    73) install_virtualbox ;;
+    
+    # Instalação em Grupo
+    90) install_all_prerequisites ;;
+    91) install_all_hashicorp ;;
+    92) install_all_terraform_tools ;;
+    93) install_all_cloud_tools ;;
+    94) install_all_kubernetes ;;
+    95) install_all_other_tools ;;
+    96) install_all_web_tools ;;
+    97) install_all_ui_tools ;;
+    99) install_all ;;
+    *) echo -e "${RED}Opcão inválida, saindo...${NC}" ;;
 esac
 
