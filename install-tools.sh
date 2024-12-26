@@ -57,6 +57,7 @@ echo " 51 - Docker + LazyDocker (Docker Container Manager) 🐳"
 echo " 52 - GitLab Runner (CI/CD) 🏃‍♂️"
 echo " 53 - ArgoCD (GitOps) 📜"
 echo " 54 - Github CLI (Github Command Line Interface) 📜"
+echo " 55 - Trivy (Container Vulnerability Scanner) 🐳"
 echo ""
 echo -e "${YELLOW}Web Tools:${NC}"
 echo " 60 - Jenkins (CI/CD) 🏗️"
@@ -828,6 +829,10 @@ install_gh() {
     sudo apt install gh -y
     echo -e "${GREEN}Github CLI instalado com sucesso!${NC}"
 }
+install_trivy() {
+    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.58.1
+    echo -e "${GREEN}Trivy instalado com sucesso!${NC}"
+}
 install_all_other_tools() {
     echo -e "${GREEN}Instalando todas as Other Tools...${NC}"
     install_ansible
@@ -835,6 +840,7 @@ install_all_other_tools() {
     install_gitlab_runner
     install_argocd
     install_gh
+    install_trivy
     echo -e "${GREEN}Todas as Other Tools foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1016,6 +1022,7 @@ case $tool_choice in
     52) install_gitlab_runner ;;
     53) install_argocd ;;
     54) install_gh ;;
+    55) install_trivy ;;
     # Web Tools
     60) install_jenkins ;;
     

@@ -63,6 +63,7 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
 - 📜 **ArgoCD**: Ferramenta GitOps
 - 📜 **GitHub CLI**: Interface de linha de comando do GitHub
+- 🐳 **Trivy**: Scanner de vulnerabilidades para containers
 
 ### Web Tools (60):
 - ⚙️ **Jenkins**: Servidor de automação para CI/CD
