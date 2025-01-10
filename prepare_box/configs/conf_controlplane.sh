@@ -51,7 +51,7 @@ kubeadm config images pull --kubernetes-version=1.31.0
 
 # Inicia o cluster
 kubeadm init --kubernetes-version=1.31.0 \
-    --pod-network-cidr=192.168.0.0/16 \
+    --pod-network-cidr=192.168.31.0/24 \
     --apiserver-advertise-address=${CONTROL_PLANE_IP}
 
 # Configura o kubeconfig para o root
@@ -71,6 +71,12 @@ done
 # Instala o Calico usando kubeconfig explícito
 kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
 kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml
+
+# Configurar tolerations para o CoreDNS
+kubectl -n kube-system patch deployment coredns --type=json -p='[{"op": "add", "path": "/spec/template/spec/tolerations", "value": [{"key": "node-role.kubernetes.io/master", "effect": "NoSchedule"}, {"key": "node-role.kubernetes.io/control-plane", "effect": "NoSchedule"}]}]'
+
+# Configurar nodeSelector para o CoreDNS
+kubectl -n kube-system patch deployment coredns --type=json -p='[{"op": "add", "path": "/spec/template/spec/nodeSelector", "value": {"kubernetes.io/os": "linux"}}]'
 
 # Aguarda os pods do Calico estarem prontos
 until kubectl --kubeconfig=/etc/kubernetes/admin.conf get pods -n calico-system | grep -q "Running"; do

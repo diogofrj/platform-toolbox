@@ -70,7 +70,7 @@ systemctl restart chronyd
 cat << 'EOF' > /home/vagrant/.zshrc
 # Configuração básica do ZSH
 export ZSH="/etc/oh-my-zsh"
-ZSH_THEME="robbyrussell"
+ZSH_THEME="agnoster"
 plugins=(git zsh-syntax-highlighting docker)
 source $ZSH/oh-my-zsh.sh
 

@@ -33,6 +33,7 @@ echo " 23 - Terramaid (Terraform Diagrammer) 📜"
 echo " 24 - Tfswitch (Terraform Version Manager) 📜"
 echo " 25 - Infracost (Terraform Cost Estimation) 💰"
 echo " 26 - tflint (Terraform Linter) 📜"
+echo " 27 - Diagrams (Terraform Diagrammer) 📜"
 echo ""
 echo -e "${YELLOW}Cloud Tools:${NC}"
 echo " 30 - Azure CLI (Azure Command Line Interface) ☁️"
@@ -725,9 +726,14 @@ install_ansible() {
     echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
 }
 install_docker() {
-  # Removendo instalacoes antigas
-  sudo apt autoremove -y
-  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove -y $pkg; done
+    echo -e "${GREEN}Instalando Docker...${NC}"
+    
+    # Remove instalações antigas
+    sudo apt autoremove -y
+    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do 
+        sudo apt-get remove -y $pkg
+    done
+
     # Remove pacotes antigos do Docker se existirem
     for pkg in docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras; do
         if dpkg -l | grep -q "^ii  $pkg "; then
@@ -736,34 +742,61 @@ install_docker() {
     done
 
     # Remove diretórios do Docker se existirem
-    if [ -d "/var/lib/docker" ]; then
-        sudo rm -rf /var/lib/docker
-    fi
-    if [ -d "/var/lib/containerd" ]; then
-        sudo rm -rf /var/lib/containerd
-    fi
-    if [ -f "/etc/apt/sources.list.d/docker.list" ]; then
-        sudo rm -f /etc/apt/sources.list.d/docker.list
-    fi
-    if [ -f "/etc/apt/keyrings/docker.asc" ]; then
-        sudo rm -f /etc/apt/keyrings/docker.asc
-    fi
+    sudo rm -rf /var/lib/docker
+    sudo rm -rf /var/lib/containerd
+    sudo rm -f /etc/apt/sources.list.d/docker.list
+    sudo rm -f /etc/apt/keyrings/docker.asc
 
     # Instalando Docker
     sudo apt install -y apt-transport-https ca-certificates curl gnupg
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
     # Adicionando o repositório Docker
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+    # Adiciona o usuário atual ao grupo docker
     sudo usermod -aG docker $USER
     
-    echo -e "${GREEN}Docker instalado com sucesso!${NC}"
+    # Cria o grupo docker se não existir
+    if ! getent group docker > /dev/null; then
+        sudo groupadd docker
+    fi
+
+    # Configura as permissões do socket do Docker
+    sudo chown root:docker /var/run/docker.sock
+    sudo chmod 666 /var/run/docker.sock
+
+    # Habilita e inicia o serviço Docker
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    # Verifica a instalação
+    echo -e "${YELLOW}Verificando a instalação do Docker...${NC}"
+    if docker --version > /dev/null 2>&1; then
+        echo -e "${GREEN}Docker instalado com sucesso!${NC}"
+        echo -e "${YELLOW}Versão do Docker:${NC}"
+        docker --version
+    else
+        echo -e "${RED}Erro na instalação do Docker${NC}"
+        return 1
+    fi
+
+    # Mensagem importante para o usuário
+    echo -e "${YELLOW}IMPORTANTE: Para que as alterações de permissão tenham efeito, você precisa:${NC}"
+    echo -e "1. Fazer logout e login novamente, ou"
+    echo -e "2. Executar o comando: ${GREEN}newgrp docker${NC}"
+    echo -e "${YELLOW}Deseja executar 'newgrp docker' agora? (s/n)${NC}"
+    read -r response
+    if [[ "$response" =~ ^([sS])$ ]]; then
+        newgrp docker
+    fi
+
     #-----------------------------------------------------
     echo -e "${YELLOW}Instalando LazyDocker...${NC}"
     # LazyDocker Variables
@@ -787,8 +820,6 @@ install_docker() {
     sudo mv lazydocker /usr/local/bin/
     sudo chmod 755 /usr/local/bin/lazydocker
     sudo rm -rf "lazydocker_${LATEST_VERSION//v/}_Linux_x86_64.tar.gz" LICENSE
-    
-    echo -e "${GREEN}Docker + LazyDocker instalado com sucesso!${NC}"
 }
 # Function to install GitLab Runner
 install_gitlab_runner() {
