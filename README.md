@@ -67,7 +67,7 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
 - 📜 **ArgoCD**: Ferramenta GitOps
 - 📜 **GitHub CLI**: Interface de linha de comando do GitHub
-
+- 📜 **Pre-commit**: Ferramenta de gerenciamento de hooks do Git
 ### Web Tools (60):
 - ⚙️ **Jenkins**: Servidor de automação para CI/CD
 

@@ -61,6 +61,7 @@ echo " 51 - Docker + LazyDocker (Docker Container Manager) 🐳"
 echo " 52 - GitLab Runner (CI/CD) 🏃‍♂️"
 echo " 53 - ArgoCD (GitOps) 📜"
 echo " 54 - Github CLI (Github Command Line Interface) 📜"
+echo " 55 - Pre-commit-hooks (Git Hooks) 📜"
 echo ""
 echo -e "${YELLOW}Web Tools:${NC}"
 echo " 60 - Jenkins (CI/CD) 🏗️"
@@ -955,6 +956,21 @@ install_gh() {
     sudo apt install gh -y
     echo -e "${GREEN}Github CLI instalado com sucesso!${NC}"
 }
+
+install_pre_commit_hooks() {
+    # Instala python3-pip e python3-venv como pré-requisitos
+    sudo apt install python3-pip python3-venv -y
+    
+    # Instala pipx
+    python3 -m pip install --user pipx
+    python3 -m pipx ensurepath
+    
+    # Instala pre-commit usando pipx
+    pipx install pre-commit --force
+    
+    echo -e "${GREEN}Pre-commit instalado com sucesso!${NC}"
+}
+
 install_all_other_tools() {
     echo -e "${GREEN}Instalando todas as Other Tools...${NC}"
     install_ansible
@@ -962,6 +978,7 @@ install_all_other_tools() {
     install_gitlab_runner
     install_argocd
     install_gh
+    install_pre_commit_hooks
     echo -e "${GREEN}Todas as Other Tools foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1146,6 +1163,7 @@ case $tool_choice in
     52) install_gitlab_runner ;;
     53) install_argocd ;;
     54) install_gh ;;
+    55) install_pre_commit_hooks ;;
     # Web Tools
     60) install_jenkins ;;
     
