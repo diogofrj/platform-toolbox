@@ -24,6 +24,7 @@ echo " 11 - HashiCorp Packer 💿"
 echo " 12 - HashiCorp Vault 🔐"
 echo " 13 - HashiCorp Vagrant 🛠️"
 echo " 14 - HashiCorp Terraform 🌍"
+echo " 15 - HashiCorp Nomad 🌐"
 echo ""
 echo -e "${YELLOW}Terraform Tools:${NC}"
 echo " 20 - Checkov (Terraform Security Scanner) 🔍"
@@ -266,6 +267,36 @@ install_terraform() {
         return 1
     fi
 }
+install_nomad() {
+    echo -e "${GREEN}Instalando HashiCorp Nomad...${NC}"
+    
+    # Obtém a última versão do Nomad através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/nomad/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Nomad${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Nomad versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/nomad/${LATEST_VERSION}/nomad_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Nomad. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "nomad_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "nomad_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "nomad_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv nomad /usr/local/bin/
+        rm -f "nomad_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Nomad ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Nomad não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
 install_all_hashicorp() {
     echo -e "${GREEN}Instalando todas as ferramentas HashiCorp...${NC}"
     install_consul
@@ -273,6 +304,7 @@ install_all_hashicorp() {
     install_vault
     install_vagrant
     install_terraform
+    install_nomad
     echo -e "${GREEN}Todas as ferramentas HashiCorp foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1014,7 +1046,7 @@ case $tool_choice in
     12) install_vault ;;
     13) install_vagrant ;;
     14) install_terraform ;;
-    
+    15) install_nomad ;;
     # Terraform Tools
     20) install_checkov ;;
     21) install_terraform_docs ;;

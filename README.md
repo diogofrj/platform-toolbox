@@ -30,7 +30,7 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 🔐 **HashiCorp Vault**: Gerenciador de segredos
 - 🛠️ **HashiCorp Vagrant**: Gerenciador de máquinas virtuais
 - 🌍 **HashiCorp Terraform**: Software de infraestrutura como código
-
+- 🌍 **HashiCorp Nomad**: Orquestrador de contêineres e aplicativos
 ### Terraform Tools (20-26):
 - 🔍 **Checkov**: Scanner de segurança para Terraform
 - 📜 **Terraform-docs**: Gerador de documentação para Terraform
