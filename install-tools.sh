@@ -960,13 +960,9 @@ install_gh() {
 install_pre_commit_hooks() {
     # Instala python3-pip e python3-venv como pré-requisitos
     sudo apt install python3-pip python3-venv pipx -y
-    
-    # Instala pipx
-    python3 -m pip install --user pipx
-    python3 -m pipx ensurepath
-    
+   
     # Instala pre-commit usando pipx
-    pipx install pre-commit --force --system-site-packages
+    pipx install pre-commit --force
     
     echo -e "${GREEN}Pre-commit instalado com sucesso!${NC}"
 }
