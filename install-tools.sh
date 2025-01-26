@@ -25,6 +25,8 @@ echo " 12 - HashiCorp Vault 🔐"
 echo " 13 - HashiCorp Vagrant 🛠️"
 echo " 14 - HashiCorp Terraform 🌍"
 echo " 15 - HashiCorp Nomad 🌐"
+echo " 16 - HashiCorp Boundary 🔐"
+echo " 17 - HashiCorp Boundary Desktop 🌐"
 echo ""
 echo -e "${YELLOW}Terraform Tools:${NC}"
 echo " 20 - Checkov (Terraform Security Scanner) 🔍"
@@ -297,6 +299,66 @@ install_nomad() {
         return 1
     fi
 }
+
+install_boundary() {
+    echo -e "${GREEN}Instalando HashiCorp Boundary...${NC}"
+    
+    # Obtém a última versão do Boundary através da API do GitHub
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/boundary/releases/latest | jq -r .tag_name | sed 's/v//')
+    
+    if [ -z "$LATEST_VERSION" ]; then
+        echo -e "${RED}Erro ao obter a versão mais recente do Boundary${NC}"
+        return 1
+    fi
+
+    echo -e "${YELLOW}Baixando Boundary versão ${LATEST_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/boundary/${LATEST_VERSION}/boundary_${LATEST_VERSION}_linux_amd64.zip"; then
+        echo -e "${RED}Erro ao baixar o Boundary. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "boundary_${LATEST_VERSION}_linux_amd64.zip" ] && [ -s "boundary_${LATEST_VERSION}_linux_amd64.zip" ]; then
+        unzip "boundary_${LATEST_VERSION}_linux_amd64.zip"
+        sudo mv boundary /usr/local/bin/
+        rm -f "boundary_${LATEST_VERSION}_linux_amd64.zip" LICENSE.txt
+        echo -e "${GREEN}HashiCorp Boundary ${LATEST_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo zip do Boundary não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
+
+install_boundary_desktop() {
+    echo -e "${GREEN}Instalando HashiCorp Boundary Desktop...${NC}"
+    
+    # Versão fixa do Boundary Desktop
+    BOUNDARY_VERSION="2.2.0"
+
+    echo -e "${YELLOW}Baixando Boundary Desktop versão ${BOUNDARY_VERSION}...${NC}"
+    
+    # Download direto da fonte oficial
+    if ! curl -LO "https://releases.hashicorp.com/boundary-desktop/${BOUNDARY_VERSION}/boundary-desktop_${BOUNDARY_VERSION}_amd64.deb"; then
+        echo -e "${RED}Erro ao baixar o Boundary Desktop. Verifique sua conexão com a internet.${NC}"
+        return 1
+    fi
+    
+    # Verifica se o arquivo existe e tem tamanho maior que zero
+    if [ -f "boundary-desktop_${BOUNDARY_VERSION}_amd64.deb" ] && [ -s "boundary-desktop_${BOUNDARY_VERSION}_amd64.deb" ]; then
+        sudo dpkg -i "boundary-desktop_${BOUNDARY_VERSION}_amd64.deb"
+        rm -f "boundary-desktop_${BOUNDARY_VERSION}_amd64.deb"
+        echo -e "${GREEN}HashiCorp Boundary Desktop ${BOUNDARY_VERSION} instalado com sucesso!${NC}"
+    else
+        echo -e "${RED}Arquivo deb do Boundary Desktop não foi baixado corretamente${NC}"
+        return 1
+    fi
+}
+
+
+
+
 install_all_hashicorp() {
     echo -e "${GREEN}Instalando todas as ferramentas HashiCorp...${NC}"
     install_consul
@@ -305,6 +367,8 @@ install_all_hashicorp() {
     install_vagrant
     install_terraform
     install_nomad
+    install_boundary
+    install_boundary_desktop
     echo -e "${GREEN}Todas as ferramentas HashiCorp foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1047,6 +1111,9 @@ case $tool_choice in
     13) install_vagrant ;;
     14) install_terraform ;;
     15) install_nomad ;;
+    16) install_boundary ;;
+    17) install_boundary_desktop ;;
+
     # Terraform Tools
     20) install_checkov ;;
     21) install_terraform_docs ;;

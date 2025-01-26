@@ -31,6 +31,10 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 🛠️ **HashiCorp Vagrant**: Gerenciador de máquinas virtuais
 - 🌍 **HashiCorp Terraform**: Software de infraestrutura como código
 - 🌍 **HashiCorp Nomad**: Orquestrador de contêineres e aplicativos
+- 🔐 **HashiCorp Boundary**: Gerenciador de acesso e segredos
+- 🌐 **HashiCorp Boundary Desktop**: Interface gráfica para o Boundary
+
+
 ### Terraform Tools (20-26):
 - 🔍 **Checkov**: Scanner de segurança para Terraform
 - 📜 **Terraform-docs**: Gerador de documentação para Terraform
