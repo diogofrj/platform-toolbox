@@ -34,9 +34,9 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 🔐 **HashiCorp Boundary**: Gerenciador de acesso e segredos
 - 🌐 **HashiCorp Boundary Desktop**: Interface gráfica para o Boundary
 
-
 ### Terraform Tools (20-26):
 - 🔍 **Checkov**: Scanner de segurança para Terraform
+- 🔍 **Trivy**: Scanner de segurança para Terraform e outros
 - 📜 **Terraform-docs**: Gerador de documentação para Terraform
 - 📜 **Terragrunt**: CLI do Terraform
 - 📜 **Terramaid**: Gerador de diagramas para Terraform

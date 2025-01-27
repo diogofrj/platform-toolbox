@@ -37,6 +37,7 @@ echo " 24 - Tfswitch (Terraform Version Manager) 📜"
 echo " 25 - Infracost (Terraform Cost Estimation) 💰"
 echo " 26 - tflint (Terraform Linter) 📜"
 echo " 27 - Diagrams (Terraform Diagrammer) 📜"
+echo " 28 - Trivy (Terraform Security Scanner) 🔍"
 echo ""
 echo -e "${YELLOW}Cloud Tools:${NC}"
 echo " 30 - Azure CLI (Azure Command Line Interface) ☁️"
@@ -524,6 +525,15 @@ install_tflint () {
     echo -e "${GREEN}TFLint instalado com sucesso!${NC}"
 }
 
+install_trivy() {
+    echo "Installing Trivy..."
+    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+    
+    mv -iv ./bin/trivy ~/.local/bin/
+    rm -rf ./bin
+    echo -e "${GREEN}Trivy instalado com sucesso!${NC}"
+}
+
 install_all_terraform_tools() {
     echo -e "${GREEN}Instalando todas as ferramentas Terraform...${NC}"
     install_checkov
@@ -533,6 +543,7 @@ install_all_terraform_tools() {
     install_tfswitch
     install_infracost
     install_tflint
+    install_trivy
     echo -e "${GREEN}Todas as ferramentas Terraform foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1135,7 +1146,8 @@ case $tool_choice in
     24) install_tfswitch ;;
     25) install_infracost ;;
     26) install_tflint ;;
-    
+    27) install_trivy ;;
+
     # Cloud Tools
     30) install_azurecli ;;
     31) install_azdevcli ;;
