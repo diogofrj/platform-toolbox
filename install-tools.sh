@@ -850,7 +850,7 @@ install_awx() {
         install_kubectl
     fi
     sudo apt install make -y
-    git clone https://github.com/ansible/awx-operator.git
+    git clone -b 2.19.0 https://github.com/ansible/awx-operator.git
     cd awx-operator/
     # git checkout 2.19.1 # Or whatever the latest version is
     export NAMESPACE=ansible-awx
@@ -859,18 +859,10 @@ install_awx() {
     kubectl config set-context --current --namespace=ansible-awx
     kubectl create -f awx-demo.yml -n ansible-awx
 
-echo "Aguardando os pods iniciarem..."
-kubectl wait --for=condition=ready pod -l "app.kubernetes.io/name=awx-operator" -n ansible-awx --timeout=300s
-kubectl get pods -n ansible-awx
-kubectl get svc -n ansible-awx
-
-minikube service awx-demo-service --url -n ansible-awx
-kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 10445:80 &
-
-    echo -e "${GREEN}AWX instalado com sucesso!${NC}"
-    # Obtém o IP do host
-    HOST_IP=$(hostname -I | awk '{print $1}')
-    echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
+    echo "Aguardando os pods iniciarem..."
+    kubectl wait --for=condition=ready pod -l "app.kubernetes.io/name=awx-operator" -n ansible-awx --timeout=300s
+    kubectl get pods -n ansible-awx
+    kubectl get svc -n ansible-awx
 
     # Obtém e exibe a senha do admin
     echo -e "${YELLOW}Senha do administrador AWX:${NC}"
@@ -878,6 +870,16 @@ kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 1
     echo ""
     echo -e "${YELLOW}Usuário: admin${NC}"
     echo -e "${YELLOW}Guarde esta senha em um local seguro!${NC}"
+
+    minikube service awx-demo-service --url -n ansible-awx
+    kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 10445:80 &> /dev/null &
+
+    echo -e "${GREEN}AWX instalado com sucesso!${NC}"
+    # Obtém o IP do host
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
+
+
 }
 
 install_docker() {
