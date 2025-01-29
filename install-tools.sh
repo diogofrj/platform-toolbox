@@ -833,54 +833,53 @@ install_ansible() {
     echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
 }
 install_awx() {
-    echo -e "${GREEN}Instalando AWX...${NC}"
-    # Verifica se o Docker está instalado
-    if ! command -v docker &> /dev/null; then
-        echo -e "${YELLOW}Docker não encontrado. Instalando Docker primeiro...${NC}"
-        install_docker
-    fi
-    # Verifica se o Docker está instalado
-    if ! command -v minikube &> /dev/null; then
-        echo -e "${YELLOW}Minikube não encontrado. Instalando Minikube primeiro...${NC}"
-        install_minikube
-    fi
-    # Verifica se o Kubectl está instalado
-    if ! command -v kubectl &> /dev/null; then
-        echo -e "${YELLOW}Kubectl não encontrado. Instalando Kubectl primeiro...${NC}"
-        install_kubectl
-    fi
-    sudo apt install make -y
-    git clone -b 2.19.0 https://github.com/ansible/awx-operator.git
-    cd awx-operator/
-    # git checkout 2.19.1 # Or whatever the latest version is
-    export NAMESPACE=ansible-awx
-    make deploy
-    kubectl create namespace ansible-awx --dry-run=client -o yaml | kubectl apply -f -
-    kubectl config set-context --current --namespace=ansible-awx
-    kubectl create -f awx-demo.yml -n ansible-awx
+#     echo -e "${GREEN}Instalando AWX...${NC}"
+#     # Verifica se o Docker está instalado
+#     if ! command -v docker &> /dev/null; then
+#         echo -e "${YELLOW}Docker não encontrado. Instalando Docker primeiro...${NC}"
+#         install_docker
+#     fi
+#     # Verifica se o Docker está instalado
+#     if ! command -v minikube &> /dev/null; then
+#         echo -e "${YELLOW}Minikube não encontrado. Instalando Minikube primeiro...${NC}"
+#         install_minikube
+#     fi
+#     # Verifica se o Kubectl está instalado
+#     if ! command -v kubectl &> /dev/null; then
+#         echo -e "${YELLOW}Kubectl não encontrado. Instalando Kubectl primeiro...${NC}"
+#         install_kubectl
+#     fi
+#     sudo apt install make -y
+#     git clone -b 2.19.0 https://github.com/ansible/awx-operator.git
+#     cd awx-operator/
+#     # git checkout 2.19.1 # Or whatever the latest version is
+#     export NAMESPACE=ansible-awx
+#     make deploy
+#     kubectl create namespace ansible-awx --dry-run=client -o yaml | kubectl apply -f -
+#     kubectl config set-context --current --namespace=ansible-awx
+#     kubectl create -f awx-demo.yml -n ansible-awx
 
-    echo "Aguardando os pods iniciarem..."
-    kubectl wait --for=condition=ready pod -l "app.kubernetes.io/name=awx-operator" -n ansible-awx --timeout=300s
-    kubectl get pods -n ansible-awx
-    kubectl get svc -n ansible-awx
+#     echo "Aguardando os pods iniciarem..."
+#     kubectl wait --for=condition=ready pod -l "app.kubernetes.io/name=awx-operator" -n ansible-awx --timeout=300s
+#     kubectl get pods,svc -n ansible-awx
 
-    # Obtém e exibe a senha do admin
-    echo -e "${YELLOW}Senha do administrador AWX:${NC}"
-    kubectl get secret awx-demo-admin-password -o jsonpath="{.data.password}" -n ansible-awx | base64 --decode
-    echo ""
-    echo -e "${YELLOW}Usuário: admin${NC}"
-    echo -e "${YELLOW}Guarde esta senha em um local seguro!${NC}"
+#     # Obtém e exibe a senha do admin
+#     echo -e "${YELLOW}Senha do administrador AWX:${NC}"
+#     kubectl get secret awx-demo-admin-password -o jsonpath="{.data.password}" -n ansible-awx | base64 --decode
+#     echo ""
+#     echo -e "${YELLOW}Usuário: admin${NC}"
+#     echo -e "${YELLOW}Guarde esta senha em um local seguro!${NC}"
 
-    minikube service awx-demo-service --url -n ansible-awx
-    kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 10445:80 &> /dev/null &
+#     minikube service awx-demo-service --url -n ansible-awx
+#     kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 10445:80 &> /dev/null &
 
-    echo -e "${GREEN}AWX instalado com sucesso!${NC}"
-    # Obtém o IP do host
-    HOST_IP=$(hostname -I | awk '{print $1}')
-    echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
+#     echo -e "${GREEN}AWX instalado com sucesso!${NC}"
+#     # Obtém o IP do host
+#     HOST_IP=$(hostname -I | awk '{print $1}')
+#     echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
 
-
-}
+echo "Instalação Pendente"
+# }
 
 install_docker() {
     echo -e "${GREEN}Instalando Docker...${NC}"
