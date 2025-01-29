@@ -36,7 +36,6 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 
 ### Terraform Tools (20-26):
 - 🔍 **Checkov**: Scanner de segurança para Terraform
-- 🔍 **Trivy**: Scanner de segurança para Terraform e outros
 - 📜 **Terraform-docs**: Gerador de documentação para Terraform
 - 📜 **Terragrunt**: CLI do Terraform
 - 📜 **Terramaid**: Gerador de diagramas para Terraform
@@ -63,11 +62,13 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 
 ### Other Tools (50-54):
 - 📜 **Ansible**: Ferramenta de gerenciamento de configuração
+- 📜 **Ansible AWX/Tower**: Ferramenta de gerenciamento de configuração (TODO: Fix bug: ImagePullBackOff)
 - 🐳 **Docker + LazyDocker**: Plataforma de containerização
 - 🏃‍♂️ **GitLab Runner**: Executor de CI/CD do GitLab
 - 📜 **ArgoCD**: Ferramenta GitOps
 - 📜 **GitHub CLI**: Interface de linha de comando do GitHub
 - 📜 **Pre-commit**: Ferramenta de gerenciamento de hooks do Git
+
 ### Web Tools (60):
 - ⚙️ **Jenkins**: Servidor de automação para CI/CD
 
@@ -76,6 +77,13 @@ Os scripts instalam as seguintes ferramentas e outras aplicações:
 - 📮 **Postman**: Plataforma de API
 - 🗒️ **VS Codium**: Editor de código
 - 💾 **VirtualBox**: Gerenciador de máquinas virtuais
+
+### Homelab OS (80-85):
+- 💻 **CasaOS**: Sistema operacional para casa
+- 💻 **CosmosOS**: Sistema operacional para casa
+- 💻 **HomelabOS**: Sistema operacional para casa
+- 💻 **Runtipi**: Sistema operacional para casa
+- 💻 **Ollama**: LLM Server + **DeepSeek R1**
 
 ### Opções de Instalação em Grupo (90-99):
 - 90: Instalar TODOS os pré-requisitos
@@ -132,6 +140,21 @@ Por exemplo:
 - Para confirmar o Terraform: `terraform --version`
 
 Sinta-se à vontade para modificar o script se quiser adicionar mais ferramentas ou ajustar o processo de instalação para sua configuração específica.
+
+## 🏃 Uso - Ollama & DeepSeek R1
+
+Rodar manualmente o modelo DeepSeek R1 com Ollama via terminal:
+
+```bash
+ollama list
+ollama run deepseek-r1:7b
+```
+
+Rodar manualmente o modelo DeepSeek R1 com Ollama via Web UI:
+
+```bash
+open-webui serve
+```
 
 ## 🏗️ Configuração do Vagrant
 

@@ -37,7 +37,6 @@ echo " 24 - Tfswitch (Terraform Version Manager) 📜"
 echo " 25 - Infracost (Terraform Cost Estimation) 💰"
 echo " 26 - tflint (Terraform Linter) 📜"
 echo " 27 - Diagrams (Terraform Diagrammer) 📜"
-echo " 28 - Trivy (Terraform Security Scanner) 🔍"
 echo ""
 echo -e "${YELLOW}Cloud Tools:${NC}"
 echo " 30 - Azure CLI (Azure Command Line Interface) ☁️"
@@ -58,11 +57,12 @@ echo " 46 - KIND (Kubernetes in Docker) 🐶"
 echo ""
 echo -e "${YELLOW}Other Tools:${NC}"
 echo " 50 - Ansible (Automation Tool) 📜"
-echo " 51 - Docker + LazyDocker (Docker Container Manager) 🐳"
-echo " 52 - GitLab Runner (CI/CD) 🏃‍♂️"
-echo " 53 - ArgoCD (GitOps) 📜"
-echo " 54 - Github CLI (Github Command Line Interface) 📜"
-echo " 55 - Pre-commit-hooks (Git Hooks) 📜"
+echo " 51 - Ansible AWX/Tower (Automation Tool) 📜"  #TODO: Fix bug: ImagePullBackOff
+echo " 52 - Docker + LazyDocker (Docker Container Manager) 🐳"
+echo " 53 - GitLab Runner (CI/CD) 🏃‍♂️"
+echo " 54 - ArgoCD (GitOps) 📜"
+echo " 55 - Github CLI (Github Command Line Interface) 📜"
+echo " 56 - Pre-commit-hooks (Git Hooks) 📜"
 echo ""
 echo -e "${YELLOW}Web Tools:${NC}"
 echo " 60 - Jenkins (CI/CD) 🏗️"
@@ -72,6 +72,13 @@ echo " 70 - Insomnia (API Client) 📡"
 echo " 71 - Postman (API Client) 📮"
 echo " 72 - VS Codium (Code Editor) 🗒️"
 echo " 73 - VirtualBox (Virtual Machine Manager) 💾"
+echo ""
+echo -e "${YELLOW}Home Server OS distros for self-hosting and LLM :${NC}"
+echo " 81 - CasaOS (Home Server OS) 💻"
+echo " 82 - CosmosOS (Home Server OS) 💻"
+echo " 83 - HomelabOS (Home Server OS) 💻"
+echo " 84 - RunTipi (Home Server OS) "
+echo " 85 - DeepSeek R1 Locally with Ollama LLM 🤖"
 echo ""
 echo -e "${YELLOW}Opções de Instalação em Grupo:${NC}"
 echo " 90 - Instalar TODOS os pré-requisitos"
@@ -87,7 +94,7 @@ echo ""
 
 read -p "Digite o número correspondente à sua escolha: " tool_choice
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação dos pré-requisitos
+# 1 - Funções de instalação dos pré-requisitos
 install_jq() {
     echo -e "${GREEN}Instalando jq...${NC}"
     sudo apt-get install jq -y
@@ -117,7 +124,7 @@ install_all_prerequisites() {
     echo -e "${GREEN}Todos os pré-requisitos foram instalados com sucesso!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas HashiCorp
+# 2 - Funções de instalação das ferramentas HashiCorp
 install_consul() {
     echo -e "${GREEN}Instalando HashiCorp Consul...${NC}"
     
@@ -374,7 +381,7 @@ install_all_hashicorp() {
     echo -e "${GREEN}Todas as ferramentas HashiCorp foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas Terraform Tools
+# 3 - Funções de instalação das ferramentas Terraform Tools
 install_checkov() {
     echo -e "${GREEN}Instalando Checkov...${NC}"
     
@@ -525,15 +532,6 @@ install_tflint () {
     echo -e "${GREEN}TFLint instalado com sucesso!${NC}"
 }
 
-install_trivy() {
-    echo "Installing Trivy..."
-    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-    
-    mv -iv ./bin/trivy ~/.local/bin/
-    rm -rf ./bin
-    echo -e "${GREEN}Trivy instalado com sucesso!${NC}"
-}
-
 install_all_terraform_tools() {
     echo -e "${GREEN}Instalando todas as ferramentas Terraform...${NC}"
     install_checkov
@@ -543,11 +541,10 @@ install_all_terraform_tools() {
     install_tfswitch
     install_infracost
     install_tflint
-    install_trivy
     echo -e "${GREEN}Todas as ferramentas Terraform foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas Cloud Tools
+# 4 - Funções de instalação das ferramentas Cloud Tools
 install_azurecli() {
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     echo -e "${GREEN}Azure CLI instalado com sucesso!${NC}"
@@ -594,7 +591,7 @@ install_all_cloud_tools() {
     echo -e "${GREEN}Todas as ferramentas Cloud foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas Kubernetes Tools
+# 5 - Funções de instalação das ferramentas Kubernetes Tools
 install_kubectl() {
     sudo curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
     sudo chmod +x ./kubectl
@@ -712,6 +709,8 @@ install_minikube() {
     sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     sudo install minikube-linux-amd64 /usr/local/bin/minikube
     sudo rm -f minikube-linux-amd64 LICENSE
+    minikube start --vm-driver=docker --addons=ingress
+
     echo -e "${GREEN}minikube instalado com sucesso!${NC}"
 }
 # Função para instalar o KIND
@@ -826,13 +825,61 @@ install_all_kubernetes() {
     echo -e "${GREEN}Todas as ferramentas Kubernetes foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas Other Tools
+# 6 - Funções de instalação das ferramentas Other Tools
 install_ansible() {
     sudo apt install python3-pip -y
     sudo apt install pipx
     pipx install --include-deps ansible --force
     echo -e "${GREEN}Ansible instalado com sucesso!${NC}"
 }
+install_awx() {
+    echo -e "${GREEN}Instalando AWX...${NC}"
+    # Verifica se o Docker está instalado
+    if ! command -v docker &> /dev/null; then
+        echo -e "${YELLOW}Docker não encontrado. Instalando Docker primeiro...${NC}"
+        install_docker
+    fi
+    # Verifica se o Docker está instalado
+    if ! command -v minikube &> /dev/null; then
+        echo -e "${YELLOW}Minikube não encontrado. Instalando Minikube primeiro...${NC}"
+        install_minikube
+    fi
+    # Verifica se o Kubectl está instalado
+    if ! command -v kubectl &> /dev/null; then
+        echo -e "${YELLOW}Kubectl não encontrado. Instalando Kubectl primeiro...${NC}"
+        install_kubectl
+    fi
+    sudo apt install make -y
+    git clone https://github.com/ansible/awx-operator.git
+    cd awx-operator/
+    # git checkout 2.19.1 # Or whatever the latest version is
+    export NAMESPACE=ansible-awx
+    make deploy
+    kubectl create namespace ansible-awx --dry-run=client -o yaml | kubectl apply -f -
+    kubectl config set-context --current --namespace=ansible-awx
+    kubectl create -f awx-demo.yml -n ansible-awx
+
+echo "Aguardando os pods iniciarem..."
+kubectl wait --for=condition=ready pod -l "app.kubernetes.io/name=awx-operator" -n ansible-awx --timeout=300s
+kubectl get pods -n ansible-awx
+kubectl get svc -n ansible-awx
+
+minikube service awx-demo-service --url -n ansible-awx
+kubectl port-forward service/awx-demo-service -n ansible-awx --address 0.0.0.0 10445:80 &
+
+    echo -e "${GREEN}AWX instalado com sucesso!${NC}"
+    # Obtém o IP do host
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
+
+    # Obtém e exibe a senha do admin
+    echo -e "${YELLOW}Senha do administrador AWX:${NC}"
+    kubectl get secret awx-demo-admin-password -o jsonpath="{.data.password}" -n ansible-awx | base64 --decode
+    echo ""
+    echo -e "${YELLOW}Usuário: admin${NC}"
+    echo -e "${YELLOW}Guarde esta senha em um local seguro!${NC}"
+}
+
 install_docker() {
     echo -e "${GREEN}Instalando Docker...${NC}"
     
@@ -866,7 +913,7 @@ install_docker() {
         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
 
     # Adiciona o usuário atual ao grupo docker
     sudo usermod -aG docker $USER
@@ -989,7 +1036,7 @@ install_all_other_tools() {
     echo -e "${GREEN}Todas as Other Tools foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas Web Tools
+# 7 - Funções de instalação das ferramentas Web Tools
 install_jenkins() {
     echo -e "${YELLOW}Instalando Java JDK...${NC}"
     sudo apt update
@@ -1025,7 +1072,7 @@ install_all_web_tools() {
     echo -e "${GREEN}Todas as Web Tools foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Funções de instalação das ferramentas UI Desktop Tools
+# 8 - Funções de instalação das ferramentas UI Desktop Tools
 # Function to install Insomnia
 install_insomnia() {
     # Add to sources
@@ -1104,7 +1151,69 @@ install_all_ui_tools() {
     echo -e "${GREEN}Todas as UI Desktop Tools foram instaladas!${NC}"
 }
 #----------------------------------------------------------------------------------------------------------------------------------------------------
-# Função para instalar todas as ferramentas
+# 8 - Funções de instalação das ferramentas Homelab OS
+install_casaos() {
+    echo -e "${YELLOW}Instalando CasaOS...${NC}"
+    curl -fsSL https://get.casaos.io | sudo bash
+    echo -e "${GREEN}CasaOS instalado com sucesso!${NC}"
+}
+
+install_cosmosos() {
+    echo -e "${YELLOW}Instalando CosmosOS...${NC}"
+            # IF YOU NEED TO CHANGE THE PORTS, DO IT BEFORE RUNNING THE COMMAND
+        # You can overwrite any other env var by adding them here
+        export COSMOS_HTTP_PORT=80
+        export COSMOS_HTTPS_PORT=443
+        sudo mkdir /opt/cosmos
+        # You can run a dry run to see what will be installed
+        curl -fsSL https://cosmos-cloud.io/get.sh | sudo -E bash -s -- --dry-run
+
+        # If you are happy with the result, you can run the command
+        curl -fsSL https://cosmos-cloud.io/get.sh | sudo -E bash -s
+    echo -e "${GREEN}CosmosOS instalado com sucesso!${NC}"
+}
+
+install_homelabos() {
+    echo -e "${YELLOW}Instalando HomelabOS...${NC}"
+    bash <(curl -s https://gitlab.com/NickBusey/HomelabOS/-/raw/master/install_homelabos.sh)
+    echo -e "${GREEN}HomelabOS instalado com sucesso!${NC}"
+}
+
+install_runtipi() {
+    echo -e "${YELLOW}Instalando RunTipi...${NC}"
+    curl -fsSL https://get.runtipi.com | sudo bash
+    echo -e "${GREEN}RunTipi instalado com sucesso!${NC}"
+}
+
+install_dietpi() {
+    echo -e "${YELLOW}Instalando DietPi...${NC}"
+    curl -sSL https://dietpi.com/dietpi-update | sudo bash
+    echo -e "${GREEN}DietPi instalado com sucesso!${NC}"
+}
+
+install_ollama() {
+    echo -e "${YELLOW}Instalando Ollama...${NC}"
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install python3
+        python3 --version
+        curl -fsSL https://ollama.com/install.sh | sh
+        ollama --version
+        sudo systemctl start ollama
+        sudo systemctl enable ollama
+    echo -e "${YELLOW}Instalando Ollama Modelo DeepSeek R1...${NC}"        
+        ollama list
+        # Ollama Web UI
+    echo -e "${YELLOW}Instalando Ollama Web UI...${NC}"
+        sudo apt install python3-venv -y
+        python3 -m venv ~/open-webui-venv
+        source ~/open-webui-venv/bin/activate
+        pip install open-webui
+        open-webui serve
+    echo -e "${GREEN}Ollama instalado com sucesso!${NC}"
+}
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+# 9 - Função para instalar todas as ferramentas
 install_all() {
     echo -e "${GREEN}Instalando TODAS as ferramentas...${NC}"
     install_all_prerequisites
@@ -1146,8 +1255,7 @@ case $tool_choice in
     24) install_tfswitch ;;
     25) install_infracost ;;
     26) install_tflint ;;
-    27) install_trivy ;;
-
+    
     # Cloud Tools
     30) install_azurecli ;;
     31) install_azdevcli ;;
@@ -1167,20 +1275,28 @@ case $tool_choice in
     
     # Other Tools
     50) install_ansible ;;
-    51) install_docker ;;
-    52) install_gitlab_runner ;;
-    53) install_argocd ;;
-    54) install_gh ;;
-    55) install_pre_commit_hooks ;;
+    51) install_awx ;;
+    52) install_docker ;;
+    53) install_gitlab_runner ;;
+    54) install_argocd ;;
+    55) install_gh ;;
+    56) install_pre_commit_hooks ;;
+
     # Web Tools
     60) install_jenkins ;;
-    
     # UI Desktop Tools
     70) install_insomnia ;;
     71) install_postman ;;
     72) install_vscodium ;;
     73) install_virtualbox ;;
     
+    # Homelab OS
+    81) install_casaos ;;
+    82) install_cosmosos ;;
+    83) install_homelabos ;;
+    84) install_runtipi ;;
+    85) install_ollama ;;
+
     # Instalação em Grupo
     90) install_all_prerequisites ;;
     91) install_all_hashicorp ;;
@@ -1193,4 +1309,3 @@ case $tool_choice in
     99) install_all ;;
     *) echo -e "${RED}Opcão inválida, saindo...${NC}" ;;
 esac
-
