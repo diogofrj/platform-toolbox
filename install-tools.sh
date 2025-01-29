@@ -879,7 +879,7 @@ install_awx() {
 #     echo -e "${YELLOW}AWX está disponível em: http://${HOST_IP}:10445/#/login${NC}"
 
 echo "Instalação Pendente"
-# }
+}
 
 install_docker() {
     echo -e "${GREEN}Instalando Docker...${NC}"
