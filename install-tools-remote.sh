@@ -8,6 +8,16 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
+# Adicionar tratamento de parâmetros
+if [ "$1" == "--all" ]; then
+    tool_choice=99
+elif [ "$1" == "--prerequisites" ]; then
+    tool_choice=90
+else
+    # Mantém o read original se não houver parâmetros
+    read -p "Digite o número correspondente à sua escolha: " tool_choice
+fi
+
 # Welcome Message
 echo ""
 echo -e "${GREEN}Instalando ferramentas necessárias para o Platform Engineer Toolbox${NC}"
@@ -94,7 +104,6 @@ echo " 97 - Instalar TODAS as UI Desktop Tools 🖥️"
 echo " 99 - Instalar TODAS as ferramentas"
 echo ""
 
-read -p "Digite o número correspondente à sua escolha: " tool_choice
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 # 1 - Funções de instalação dos pré-requisitos
 install_jq() {

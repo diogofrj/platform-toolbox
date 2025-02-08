@@ -8,9 +8,33 @@ echo '*****************************************************'
 echo ''
 apt update && apt upgrade -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-apt install -y chrony nmap zsh ca-certificates curl git vim
-git clone https://github.com/robbyrussell/oh-my-zsh.git /etc/oh-my-zsh
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /etc/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+#pre-requisitos
+apt install -y chrony nmap zsh ca-certificates curl git vim stow
+
+# Instala o getnf
+curl -fsSL https://raw.githubusercontent.com/getnf/getnf/main/install.sh | bash 
+
+# Instala as fontes
+$HOME/.local/bin/getnf -i FiraCode
+$HOME/.local/bin/getnf -i FiraMono
+$HOME/.local/bin/getnf -i Meslo
+
+
+# Instala o oh-my-zsh
+git clone https://github.com/robbyrussell/oh-my-zsh.git $HOME/dotfiles/.oh-my-zsh
+
+# Instala o plugin zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/dotfiles/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+# Instala o plugin terragrunt
+git clone https://github.com/Cellophan/terragrunt.plugin.zsh.git $HOME/dotfiles/.oh-my-zsh/custom/plugins/terragrunt
+
+
+
+
+
+
 timedatectl set-timezone America/Sao_Paulo
 localectl set-keymap br-abnt2
 sed -i "s/en_US.UTF-8 UTF-8/#en_US.UTF-8 UTF-8/" /etc/locale.gen
@@ -36,7 +60,7 @@ leapsectz right/UTC
 logdir /var/log/chrony
 EOF
 
-cat << EOF > /home/vagrant/.vimrc
+cat << EOF > /home/$USER/.vimrc
 set number              " Mostra números das linhas
 set autoindent         " Auto-indentação
 set expandtab          " Converte tabs em espaços
@@ -63,15 +87,16 @@ EOF
 
 sudo update-alternatives --set editor /usr/bin/vim
 
-usermod --shell /bin/zsh vagrant
+usermod --shell /bin/zsh $USER
 systemctl restart chronyd
 
+
 # Cria um .zshrc básico para o usuário vagrant
-cat << 'EOF' > /home/vagrant/.zshrc
+cat << 'EOF' > /home/$USER/.zshrc
 # Configuração básica do ZSH
-export ZSH="/etc/oh-my-zsh"
+export ZSH="/home/$USER/.oh-my-zsh"
 ZSH_THEME="agnoster"
-plugins=(git zsh-syntax-highlighting docker)
+plugins=(git zsh-syntax-highlighting terraform)
 source $ZSH/oh-my-zsh.sh
 
 # Aliases básicos
@@ -80,8 +105,8 @@ alias l='ls -l'
 alias k='kubectl'
 
 # Configuração do histórico
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 # Autocompletion
@@ -90,7 +115,7 @@ compinit
 EOF
 
 # Ajusta as permissões do arquivo
-chown vagrant:vagrant /home/vagrant/.zshrc
-chmod 644 /home/vagrant/.zshrc
+chown $USER:$USER /home/$USER/.zshrc
+chmod 644 /home/$USER/.zshrc
 
 
