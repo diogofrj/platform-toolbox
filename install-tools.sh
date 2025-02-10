@@ -35,10 +35,11 @@ echo " 21 - Trivy (Terraform Vulnerability Scanner) 🔍"
 echo " 22 - Terraform-docs (Terraform Documentation Generator) 📜"
 echo " 23 - Terragrunt (Terraform CLI) 📜"
 echo " 24 - Terramaid (Terraform Diagrammer) 📜"
-echo " 25 - Tfswitch (Terraform Version Manager) 📜"
-echo " 26 - Infracost (Terraform Cost Estimation) 💰"
-echo " 27 - tflint (Terraform Linter) 📜"
-echo " 28 - terraform-compliance (Terraform Compliance) 📜"
+echo " 25 - tfswitch (Terraform Version Manager) 📜"
+echo " 26 - tgswitch (Terragrunt Version Manager) 📜"
+echo " 27 - Infracost (Terraform Cost Estimation) 💰"
+echo " 28 - tflint (Terraform Linter) 📜"
+echo " 29 - terraform-compliance (Terraform Compliance) 📜"
 echo ""
 echo -e "${YELLOW}Cloud Tools:${NC}"
 echo " 30 - Azure CLI (Azure Command Line Interface) az --help ☁️"
@@ -483,6 +484,7 @@ install_tfswitch() {
     
     # Remove o link simbólico existente do Terraform, se houver
     if [ -L "/usr/local/bin/terraform" ]; then
+        sudo chown -R $USER:$USER /usr/local/bin
         sudo unlink /usr/local/bin/terraform
         sudo rm -f /usr/local/bin/terraform
         sudo rm -rf /home/$USER/.terraform.versions
@@ -515,9 +517,13 @@ install_tfswitch() {
         echo -e "${RED}Arquivo zip do Terraform Switcher não foi baixado corretamente${NC}"
         return 1
     fi
+}
 
-
-
+install_tgswitch () {
+    echo -e "${GREEN}Instalando Terragrunt Switcher...${NC}"
+    curl -L https://raw.githubusercontent.com/warrensbox/tgswitch/release/install.sh | bash
+    echo -e "${GREEN}Terragrunt Switcher ${LATEST_VERSION} instalado com sucesso!${NC}"
+}
 
     # git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
     # # Verifica qual shell está sendo usado
@@ -532,7 +538,6 @@ install_tfswitch() {
     #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"'
     # fi
     
-}
 
 install_infracost() {
     echo "Installing Infracost..."
@@ -564,6 +569,7 @@ install_all_terraform_tools() {
     install_terragrunt
     install_terramaid
     install_tfswitch
+    install_tgswitch
     install_infracost
     install_tflint
     install_terraform_compliance
@@ -1281,9 +1287,10 @@ case $tool_choice in
     23) install_terragrunt ;;
     24) install_terramaid ;;
     25) install_tfswitch ;;
-    26) install_infracost ;;
-    27) install_tflint ;;
-    28) install_terraform_compliance ;;
+    26) install_tgswitch ;;
+    27) install_infracost ;;
+    28) install_tflint ;;
+    29) install_terraform_compliance ;;
     
     # Cloud Tools
     30) install_azurecli ;;
