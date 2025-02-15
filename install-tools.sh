@@ -35,8 +35,10 @@ echo " 21 - Trivy (Terraform Vulnerability Scanner) 🔍"
 echo " 22 - Terraform-docs (Terraform Documentation Generator) 📜"
 echo " 23 - Terragrunt (Terraform CLI) 📜"
 echo " 24 - Terramaid (Terraform Diagrammer) 📜"
-echo " 25 - tfswitch (Terraform Version Manager) 📜"
-echo " 26 - tgswitch (Terragrunt Version Manager) 📜"
+echo " 25.1 - tfswitch (Terraform Version Manager) 📜"
+echo " 25.2 - tgswitch (Terragrunt Version Manager) 📜"
+echo " 26.1 - tfenv (Terraform Version Manager) 📜"
+echo " 26.2 - tgenv (Terragrunt Version Manager) 📜"
 echo " 27 - Infracost (Terraform Cost Estimation) 💰"
 echo " 28 - tflint (Terraform Linter) 📜"
 echo " 29 - terraform-compliance (Terraform Compliance) 📜"
@@ -525,19 +527,74 @@ install_tgswitch () {
     echo -e "${GREEN}Terragrunt Switcher ${LATEST_VERSION} instalado com sucesso!${NC}"
 }
 
-    # git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
-    # # Verifica qual shell está sendo usado
-    # if [ -n "$BASH_VERSION" ]; then
-    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bashrc
-    #     echo -e "${GREEN}Configuração adicionada ao .bashrc${NC}"
-    # elif [ -n "$ZSH_VERSION" ]; then
-    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.zshrc
-    #     echo -e "${GREEN}Configuração adicionada ao .zshrc${NC}"
-    # else
-    #     echo -e "${YELLOW}Shell não identificado. Adicione manualmente ao seu arquivo de configuração:${NC}"
-    #     echo 'export PATH="$HOME/.tfenv/bin:$PATH"'
-    # fi
+install_tfenv () {
+    echo -e "${GREEN}Instalando Terraform Version Manager...${NC}"
     
+    # Verifica se o tfenv já está instalado
+    if [ ! -d "$HOME/.tfenv" ]; then
+        git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+    fi
+
+    # Configuração do PATH
+    PATH_CONFIG='export PATH="$HOME/.tfenv/bin:$PATH"'
+
+    # Verifica e configura para bash se necessário
+    if [ -f "$HOME/.bashrc" ]; then
+        if ! grep -q "$PATH_CONFIG" "$HOME/.bashrc"; then
+            echo "$PATH_CONFIG" >> ~/.bashrc
+            echo -e "${GREEN}Configuração adicionada ao .bashrc${NC}"
+        else
+            echo -e "${YELLOW}Configuração já existe no .bashrc${NC}"
+        fi
+    fi
+
+    # Verifica e configura para zsh se necessário
+    if [ -f "$HOME/.zshrc" ]; then
+        if ! grep -q "$PATH_CONFIG" "$HOME/.zshrc"; then
+            echo "$PATH_CONFIG" >> ~/.zshrc
+            echo -e "${GREEN}Configuração adicionada ao .zshrc${NC}"
+        else
+            echo -e "${YELLOW}Configuração já existe no .zshrc${NC}"
+        fi
+    fi
+
+    echo -e "${GREEN}Terraform Version Manager instalado com sucesso!${NC}"
+}
+install_tgenv () {
+    echo -e "${GREEN}Instalando Terragrunt Version Manager...${NC}"
+    
+    # Verifica se o tgenv já está instalado
+    if [ ! -d "$HOME/.tgenv" ]; then
+        git clone --depth=1 --branch main https://github.com/tgenv/tgenv.git ~/.tgenv
+    fi
+
+    # Configuração do PATH
+    PATH_CONFIG='export PATH="$HOME/.tgenv/bin:$PATH"'
+
+    # Verifica e configura para bash se necessário
+    if [ -f "$HOME/.bashrc" ]; then
+        if ! grep -q "$PATH_CONFIG" "$HOME/.bashrc"; then
+            echo "$PATH_CONFIG" >> ~/.bashrc
+            echo -e "${GREEN}Configuração adicionada ao .bashrc${NC}"
+        else
+            echo -e "${YELLOW}Configuração já existe no .bashrc${NC}"
+        fi
+    fi
+
+    # Verifica e configura para zsh se necessário
+    if [ -f "$HOME/.zshrc" ]; then
+        if ! grep -q "$PATH_CONFIG" "$HOME/.zshrc"; then
+            echo "$PATH_CONFIG" >> ~/.zshrc
+            echo -e "${GREEN}Configuração adicionada ao .zshrc${NC}"
+        else
+            echo -e "${YELLOW}Configuração já existe no .zshrc${NC}"
+        fi
+    fi
+
+    echo -e "${GREEN}Terragrunt Version Manager instalado com sucesso!${NC}"
+}
+
+
 
 install_infracost() {
     echo "Installing Infracost..."
@@ -767,7 +824,7 @@ install_kind() {
         esac
         
         # Baixa a última versão do KIND
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.25.0/kind-linux-$ARCH_TAG
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.25.1.0/kind-linux-$ARCH_TAG
         chmod +x ./kind
         sudo mv ./kind /usr/local/bin/kind
         
@@ -1286,8 +1343,10 @@ case $tool_choice in
     22) install_terraform_docs ;;
     23) install_terragrunt ;;
     24) install_terramaid ;;
-    25) install_tfswitch ;;
-    26) install_tgswitch ;;
+    25.1) install_tfswitch ;;
+    25.2) install_tgswitch ;;
+    26.1) install_tfenv ;;
+    26.2) install_tgenv ;;
     27) install_infracost ;;
     28) install_tflint ;;
     29) install_terraform_compliance ;;
