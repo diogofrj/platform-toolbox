@@ -15,7 +15,7 @@ echo ""
 echo -e "${YELLOW}Pre-requisitos:${NC}"
 echo " 1 - jq"
 echo " 2 - curl"
-echo " 3 - git"
+echo " 3 - git + lazygit"
 echo " 4 - unzip"
 echo " 5 - python3-pip"
 echo ""
@@ -113,7 +113,11 @@ install_curl() {
 install_git() {
     echo -e "${GREEN}Instalando git...${NC}"
     sudo apt-get install git -y
-    echo -e "${GREEN}git instalado com sucesso!${NC}"
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit -D -t /usr/local/bin/    
+    echo -e "${GREEN}git + lazygit instalado com sucesso!${NC}"
 }
 install_unzip() {
     echo -e "${GREEN}Instalando unzip...${NC}"
