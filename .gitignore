@@ -74,7 +74,7 @@ coverage/
 *.sublime-workspace
 
 # Ignorar archivos de documentación generada
-*.pdf
+
 *.docx
 
 # Ignorar archivos de bases de datos y dumps
@@ -84,8 +84,7 @@ coverage/
 
 # Ignorar archivos generados por Docker
 *.dockerignore
-Dockerfile
-docker-compose.yml
+
 
 # Ignorar configuraciones y logs de Vagrant
 .vagrant/
